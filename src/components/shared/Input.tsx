@@ -1,18 +1,49 @@
 import { Input as ShadcnInput } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
 }
 
-export function Input({ label, error, ...props }: InputProps) {
-  return (
-    <div className="space-y-2">
-      {label && <Label>{label}</Label>}
-      <ShadcnInput {...props} className={error ? "border-red-500" : ""} />
-      {error && <p className="text-sm text-red-600">{error}</p>}
-    </div>
-  );
-}
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, className, ...props }, ref) => {
+    return (
+      <div className="space-y-2">
+        {label && (
+          <Label
+            htmlFor={props.id || props.name}
+            className={error ? "text-red-500" : ""}
+          >
+            {label}
+          </Label>
+        )}
+        <ShadcnInput
+          ref={ref}
+          {...props}
+          className={cn(
+            error && "border-red-500 focus-visible:ring-red-500",
+            className
+          )}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={
+            error ? `${props.id || props.name}-error` : undefined
+          }
+        />
+        {error && (
+          <p
+            id={`${props.id || props.name}-error`}
+            className="text-sm text-red-500 mt-1"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";
