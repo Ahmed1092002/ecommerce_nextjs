@@ -1,9 +1,8 @@
-// ...existing code...
 "use client";
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +12,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Home,
@@ -22,8 +20,10 @@ import {
   BarChart3,
   Settings,
   LogOut,
+  Store,
 } from "lucide-react";
 import { Button } from "../shared/Button";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SellerSidebarProps {
   navItems?: { label: string; href: string; icon?: React.ReactNode }[];
@@ -31,8 +31,11 @@ interface SellerSidebarProps {
 
 export function SellerSidebar({ navItems }: SellerSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout, User } = useAuth();
 
-  const items = navItems ?? [
+  // Default navigation items
+  const defaultItems = [
     {
       label: "Dashboard",
       href: "/seller/dashboard",
@@ -60,28 +63,58 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
     },
   ];
 
+  // Use provided navItems or default items
+  const items = navItems ?? defaultItems;
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <SidebarProvider>
       <Sidebar className="w-64 border-r bg-slate-900 text-slate-100">
-        <SidebarHeader className="px-6 py-4">
-          <div className="text-lg font-semibold">Seller Panel</div>
+        {/* Header */}
+        <SidebarHeader className="px-6 py-4 border-b border-slate-800">
+          <div className="flex flex-col gap-1">
+            <div className="text-lg font-semibold text-white">Seller Panel</div>
+            {User && (
+              <div className="text-xs text-slate-400">
+                {User.username || User.email}
+              </div>
+            )}
+          </div>
         </SidebarHeader>
 
-        <SidebarContent>
+        {/* Navigation Menu */}
+        <SidebarContent className="py-4">
           <SidebarMenu>
-            {items.map((it) => {
-              const active = pathname?.startsWith(it.href);
+            {items.map((item) => {
+              // Check if current path matches this item
+              const isActive =
+                pathname === item.href || pathname.startsWith(item.href + "/");
+
               return (
-                <SidebarMenuItem key={it.href}>
+                <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild>
                     <Link
-                      href={it.href}
-                      className={`flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm hover:bg-slate-800 ${
-                        active ? "bg-slate-800 text-white" : "text-slate-200"
+                      href={item.href}
+                      className={`flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm transition-colors ${
+                        isActive
+                          ? "bg-slate-800 text-white font-medium"
+                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
                       }`}
                     >
-                      {it.icon}
-                      <span>{it.label}</span>
+                      <span
+                        className={isActive ? "text-white" : "text-slate-400"}
+                      >
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -90,20 +123,30 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
           </SidebarMenu>
         </SidebarContent>
 
-        <SidebarFooter className="px-4 py-3 border-t border-slate-800">
-          <div className="flex gap-2">
-            <Link href="/">
-              <Button variant="outline" className="w-full">
-                Back to Store
-              </Button>
-            </Link>
-            <Button variant="ghost" className="ml-2">
-              <LogOut className="h-4 w-4" />
+        {/* Footer with Actions */}
+        <SidebarFooter className="px-4 py-4 border-t border-slate-800 space-y-2">
+          {/* Back to Store Button */}
+          <Link href="/products" className="block">
+            <Button
+              variant="outline"
+              className="w-full justify-start gap-2 bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white"
+            >
+              <Store className="h-4 w-4" />
+              <span>View Store</span>
             </Button>
-          </div>
+          </Link>
+
+          {/* Logout Button */}
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="w-full justify-start gap-2 text-slate-300 hover:bg-red-900/20 hover:text-red-400"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </Button>
         </SidebarFooter>
       </Sidebar>
     </SidebarProvider>
   );
 }
-// ...existing code...
