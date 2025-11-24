@@ -15,7 +15,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const { login: loginFunction } = useAuth();
+  const { login: loginFunction, error } = useAuth();
   const {
     register,
     handleSubmit,
@@ -25,11 +25,23 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    await loginFunction(data as LoginCredentials);
+    try {
+      await loginFunction(data as LoginCredentials);
+    } catch (error) {
+      // Error is already handled by useAuth hook and set in error state
+      // No need to do anything here, the error will be displayed automatically
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Show API error from useAuth hook */}
+      {error && (
+        <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded">
+          {error}
+        </div>
+      )}
+
       <Input
         label="Login"
         placeholder="Enter your login"

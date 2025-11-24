@@ -24,7 +24,7 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  const { register: registerFunction } = useAuth();
+  const { register: registerFunction, error } = useAuth();
   const {
     register,
     handleSubmit,
@@ -38,11 +38,23 @@ export default function RegisterPage() {
   const userType = watch("userType");
 
   const onSubmit = async (data: RegisterFormData) => {
-    await registerFunction(data as RegisterData);
+    try {
+      await registerFunction(data as RegisterData);
+    } catch (error) {
+      // Error is already handled by useAuth hook and set in error state
+      // No need to do anything here, the error will be displayed automatically
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Show API error from useAuth hook */}
+      {error && (
+        <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded">
+          {error}
+        </div>
+      )}
+
       <Input
         label="Email"
         type="email"

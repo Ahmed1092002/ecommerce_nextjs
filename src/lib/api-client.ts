@@ -5,18 +5,33 @@ import { STORAGE_KEYS } from "./constants";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
+// Enhanced error class with field information
+export class ApiErrorWithField extends Error {
+  statusCode: number;
+  code: string;
+  field?: string; // Add field property
+
+  constructor(
+    message: string,
+    statusCode: number,
+    code: string,
+    field?: string
+  ) {
+    super(message);
+    this.statusCode = statusCode;
+    this.code = code;
+    this.field = field;
+    this.name = "ApiErrorWithField";
+  }
+}
+
 export function createApiError(
   message: string,
   statusCode: number,
-  errorCode: string
+  errorCode: string,
+  field?: string // Add field parameter
 ) {
-  const err = new Error(message) as Error & {
-    statusCode: number;
-    code: string;
-  };
-  err.statusCode = statusCode;
-  err.code = errorCode;
-  return err;
+  return new ApiErrorWithField(message, statusCode, errorCode, field);
 }
 
 export async function apiClient<T>(
@@ -40,16 +55,22 @@ export async function apiClient<T>(
 
     if (!response.ok) {
       const error = data as ApiError;
+      // Pass the error field (e.g., "password") to createApiError
       throw createApiError(
         error.message || "An error occurred",
         error.statusCode || response.status,
-        error.error || "Unknown error"
+        error.error || "Unknown error",
+        error.error // The field name from API response
       );
     }
 
     return data;
   } catch (error) {
-    // detect our shaped error by checking for statusCode or code
+    // Re-throw our shaped error
+    if (error instanceof ApiErrorWithField) {
+      throw error;
+    }
+    // Handle network errors
     if (error && typeof (error as any).statusCode === "number") {
       throw error;
     }
