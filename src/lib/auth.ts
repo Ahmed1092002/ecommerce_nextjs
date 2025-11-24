@@ -9,6 +9,16 @@ export const auth = {
       Cookies.set(STORAGE_KEYS.TOKEN, token);
     }
   },
+  setRole: (role: string): void => {
+    if (typeof window !== "undefined") {
+      Cookies.set(STORAGE_KEYS.ROLE, role);
+    }
+  },
+  removeRole: (): void => {
+    if (typeof window !== "undefined") {
+      Cookies.remove(STORAGE_KEYS.ROLE);
+    }
+  },
 
   // Get token from localStorage
   getToken: (): string | null => {
@@ -52,6 +62,7 @@ export const auth = {
   clearAuth: (): void => {
     auth.removeToken();
     auth.removeUser();
+    auth.removeRole();
   },
 
   // Check if user is authenticated
