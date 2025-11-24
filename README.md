@@ -166,3 +166,36 @@ ecommerce_nextjs/
 └── public/
 └── images/
 ```
+
+wite to me a plan to create ecommerce ith two users seller and customer
+and in the future admin
+i will use rest api
+i want to make two layouts give me a plan and good structure
+give me a plan and sturcture
+
+Phase 1: Setup
+Set up folder structure
+Configure environment variables
+Create API client utilities
+Set up TypeScript types
+
+Phase 2: Authentication
+Create auth API routes (proxy to backend)
+Build login/register pages
+Implement JWT token management
+Set up middleware for protected routes
+
+Phase 3: Customer Features
+Customer layout
+Products listing (fetch from API)
+Product details page
+Cart functionality (API calls)
+Checkout process
+
+Phase 4: Seller Features
+Seller layout with sidebar
+Product management (CRUD via API)
+Orders management
+Dashboard analytics
+
+i want to but a diffrence layout to seller and customer in front but i want to make customer layout is defult if user login by seller navigate to seller layout
