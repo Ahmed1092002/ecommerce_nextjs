@@ -10,7 +10,7 @@ export default function SellerLayout({
 }) {
   const navItems = [
     { label: "Dashboard", href: "/seller/dashboard", icon: <Home /> },
-    { label: "Products", href: "/seller/products", icon: <Package /> },
+    { label: "Products", href: "/seller/product", icon: <Package /> },
     { label: "Orders", href: "/seller/orders", icon: <ShoppingCart /> },
     { label: "Analytics", href: "/seller/analytics", icon: <BarChart3 /> },
     { label: "Settings", href: "/seller/settings", icon: <Settings /> },

@@ -5,15 +5,20 @@ const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080/api";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log("Login request body:", body);
+    const token = request.cookies.get("token")?.value;
 
-    const response = await fetch(`${BACKEND_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+    const response = await fetch(
+      `${BACKEND_URL}/seller/products/CreateProduct`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
 
     const data = await response.json();
 
@@ -21,16 +26,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data, { status: response.status });
     }
     const res = NextResponse.json(data);
-    res.cookies.set("token", data.data.token, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-    });
-    res.cookies.set("role", data.data.userType, {
-      httpOnly: false,
-      sameSite: "lax",
-      path: "/",
-    });
 
     return res;
   } catch (error) {

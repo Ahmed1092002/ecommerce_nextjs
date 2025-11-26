@@ -6,6 +6,7 @@ import { ApiResponse } from "@/types/api";
 import { auth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { ApiErrorWithField } from "@/lib/api-client";
+import { toast } from "react-toastify";
 
 export function useAuth() {
   const [User, setUser] = useState<AuthResponse | null>(null);
@@ -22,6 +23,7 @@ export function useAuth() {
       auth.setUser(res);
       auth.setRole(res.userType);
       setUser(res);
+      toast.success("Login successful!");
       if (res.userType === "SELLER") {
         router.push("/seller/dashboard");
       } else {
@@ -37,6 +39,7 @@ export function useAuth() {
         errorMessage = error.message;
       }
       setError(errorMessage);
+      toast.error(errorMessage);
       throw error; // Re-throw so form can handle it if needed
     } finally {
       setLoading(false);
@@ -46,6 +49,7 @@ export function useAuth() {
   async function logout() {
     auth.clearAuth();
     setUser(null);
+    toast.info("Logged out successfully");
     router.push("/");
   }
 
@@ -82,6 +86,7 @@ export function useAuth() {
         errorMessage = error.message;
       }
       setError(errorMessage);
+      toast.error(errorMessage);
       throw error; // Re-throw so form can handle it if needed
     } finally {
       setLoading(false);

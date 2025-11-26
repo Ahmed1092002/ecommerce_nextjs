@@ -15,7 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <Label
             htmlFor={props.id || props.name}
-            className={error ? "text-red-500" : ""}
+            className={error ? "text-red-500" : "text-slate-700 font-medium"}
           >
             {label}
           </Label>
@@ -24,7 +24,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
           className={cn(
-            error && "border-red-500 focus-visible:ring-red-500",
+            "transition-all duration-200 focus:ring-2",
+            error
+              ? "border-red-500 focus-visible:ring-red-500"
+              : "border-slate-300 focus:border-blue-500 focus-visible:ring-blue-500",
             className
           )}
           aria-invalid={error ? "true" : "false"}

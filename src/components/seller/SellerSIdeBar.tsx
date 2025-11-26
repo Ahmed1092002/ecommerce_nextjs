@@ -77,13 +77,15 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
 
   return (
     <SidebarProvider>
-      <Sidebar className="w-64 border-r bg-slate-900 text-slate-100">
+      <Sidebar className="w-64 border-r bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 shadow-xl">
         {/* Header */}
-        <SidebarHeader className="px-6 py-4 border-b border-slate-800">
+        <SidebarHeader className="px-6 py-6 border-b border-slate-700 bg-gradient-to-r from-blue-600 to-blue-700">
           <div className="flex flex-col gap-1">
-            <div className="text-lg font-semibold text-white">Seller Panel</div>
+            <div className="text-xl font-bold text-white flex items-center gap-2">
+              🏪 <span>Seller Panel</span>
+            </div>
             {User && (
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-blue-100 font-medium">
                 {User.username || User.email}
               </div>
             )}
@@ -103,10 +105,10 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
                   <SidebarMenuButton asChild>
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm transition-colors ${
+                      className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 ${
                         isActive
-                          ? "bg-slate-800 text-white font-medium"
-                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                          ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold shadow-lg"
+                          : "text-slate-300 hover:bg-slate-700 hover:text-white hover:translate-x-1"
                       }`}
                     >
                       <span
@@ -124,12 +126,12 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         </SidebarContent>
 
         {/* Footer with Actions */}
-        <SidebarFooter className="px-4 py-4 border-t border-slate-800 space-y-2">
+        <SidebarFooter className="px-4 py-4 border-t border-slate-700 space-y-2 bg-slate-900/50">
           {/* Back to Store Button */}
           <Link href="/products" className="block">
             <Button
               variant="outline"
-              className="w-full justify-start gap-2 bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white"
+              className="w-full justify-start gap-2 bg-slate-800 border-slate-600 text-slate-200 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-500 hover:text-white hover:border-blue-500 transition-all"
             >
               <Store className="h-4 w-4" />
               <span>View Store</span>
@@ -140,7 +142,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="w-full justify-start gap-2 text-slate-300 hover:bg-red-900/20 hover:text-red-400"
+            className="w-full justify-start gap-2 text-slate-300 hover:bg-red-600 hover:text-white transition-all"
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>

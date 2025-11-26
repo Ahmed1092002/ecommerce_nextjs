@@ -34,11 +34,11 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Show API error from useAuth hook */}
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded">
-          {error}
+        <div className="p-4 text-sm text-red-600 bg-red-50 border-l-4 border-red-500 rounded-lg shadow-sm animate-shake">
+          ❌ {error}
         </div>
       )}
 
@@ -63,10 +63,20 @@ export default function LoginPage() {
         type="submit"
         isLoading={isSubmitting}
         loadingText="Logging in..."
-        className="w-full"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all"
       >
-        Login
+        🚀 Login
       </Button>
+
+      <p className="text-center text-sm text-slate-600 mt-4">
+        Don't have an account?{" "}
+        <a
+          href="/register"
+          className="text-blue-600 hover:text-orange-500 font-semibold transition-colors"
+        >
+          Register here
+        </a>
+      </p>
     </form>
   );
 }

@@ -13,23 +13,39 @@ import {
 
 export function Header() {
   return (
-    <header className="border-b bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold">
-          Store
+    <header className="border-b bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-white hover:text-orange-200 transition-colors"
+        >
+          🛒 Store
         </Link>
 
         <nav className="flex items-center gap-3">
           <Link href="/products">
-            <Button variant="ghost">Products</Button>
+            <Button
+              variant="ghost"
+              className="text-white hover:bg-blue-700 hover:text-orange-200"
+            >
+              Products
+            </Button>
           </Link>
           <Link href="/cart">
-            <Button variant="ghost">Cart</Button>
+            <Button
+              variant="ghost"
+              className="text-white hover:bg-blue-700 hover:text-orange-200"
+            >
+              Cart
+            </Button>
           </Link>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 bg-white/10 text-white border-white/30 hover:bg-white/20"
+              >
                 <Avatar>
                   <AvatarFallback>U</AvatarFallback>
                 </Avatar>

@@ -18,6 +18,7 @@ export interface CreateProductData {
   price: number;
   rating: number;
   quantity: number;
+  discount: number;
 }
 
 export interface UpdateProductData {

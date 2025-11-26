@@ -47,11 +47,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Show API error from useAuth hook */}
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded">
-          {error}
+        <div className="p-4 text-sm text-red-600 bg-red-50 border-l-4 border-red-500 rounded-lg shadow-sm animate-shake">
+          ❌ {error}
         </div>
       )}
 
@@ -82,8 +82,11 @@ export default function RegisterPage() {
       />
 
       <div className="space-y-2">
-        <label htmlFor="userType" className="text-sm font-medium">
-          Account Type
+        <label
+          htmlFor="userType"
+          className="text-sm font-semibold text-slate-700"
+        >
+          👤 Account Type
         </label>
         <Select
           value={userType}
@@ -91,27 +94,46 @@ export default function RegisterPage() {
             setValue("userType", value as "CUSTOMER" | "SELLER")
           }
         >
-          <SelectTrigger id="userType">
+          <SelectTrigger
+            id="userType"
+            className="border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all"
+          >
             <SelectValue placeholder="Select account type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="CUSTOMER">Customer</SelectItem>
-            <SelectItem value="SELLER">Seller</SelectItem>
+            <SelectItem value="CUSTOMER" className="hover:bg-blue-50">
+              🛍️ Customer
+            </SelectItem>
+            <SelectItem value="SELLER" className="hover:bg-orange-50">
+              🏪 Seller
+            </SelectItem>
           </SelectContent>
         </Select>
         {errors.userType && (
-          <p className="text-sm text-red-500">{errors.userType.message}</p>
+          <p className="text-sm text-red-500 font-medium">
+            ❌ {errors.userType.message}
+          </p>
         )}
       </div>
 
       <Button
         type="submit"
         isLoading={isSubmitting}
-        loadingText="Registering..."
-        className="w-full"
+        loadingText="Creating your account..."
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all"
       >
-        Register
+        ✨ Create Account
       </Button>
+
+      <p className="text-center text-sm text-slate-600 mt-4">
+        Already have an account?{" "}
+        <a
+          href="/login"
+          className="text-blue-600 hover:text-orange-500 font-semibold transition-colors"
+        >
+          Login here
+        </a>
+      </p>
     </form>
   );
 }
