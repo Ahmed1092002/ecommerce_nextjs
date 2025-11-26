@@ -3,12 +3,20 @@ import { CreateProductData } from "@/types/product";
 import React from "react";
 import z from "zod";
 import { Input } from "@/components/shared/Input";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import { Button } from "@/components/shared/Button";
 import { useProduct } from "@/hooks/useProduct";
 
 export default function SellerProductCreatePage() {
+  const [productData, setProductData] = React.useState<CreateProductData>({
+    name: "",
+    description: "",
+    price: 0,
+    rating: 0,
+    discount: 0,
+    quantity: 0,
+  });
   const { createProduct, Loading, error } = useProduct();
 
   const validation = z.object({
@@ -26,12 +34,32 @@ export default function SellerProductCreatePage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    getValues,
+    control,
   } = useForm<ValidationType>({
     resolver: zodResolver(validation),
   });
   async function onSubmit(data: ValidationType) {
     await createProduct(data as CreateProductData);
   }
+  // Live watch price & discount from form for total calculation
+  const price = useWatch({ control, name: "price" }) ?? productData.price ?? 0;
+  const discount =
+    useWatch({ control, name: "discount" }) ?? productData.discount ?? 0;
+  function showTotalPrice() {
+    const nPrice = Number(price) || 0;
+    const nDiscount = Number(discount) || 0;
+    if (!nPrice) return 0; // no price entered
+    if (!nDiscount) return nPrice; // no discount applied
+    const boundedDiscount = Math.min(Math.max(nDiscount, 0), 100);
+    const discountAmount = (nPrice * boundedDiscount) / 100;
+    const total = nPrice - discountAmount;
+    return Math.max(0, total);
+  }
+  React.useEffect(() => {
+    setProductData(getValues());
+  }, [getValues]);
+  console.log("Product Data:", productData);
 
   return (
     <div>
@@ -72,9 +100,9 @@ export default function SellerProductCreatePage() {
         <Input
           label="Discount"
           type="number"
-          placeholder="Enter product rating"
+          placeholder="Enter product discount (%)"
           id="discount"
-          error={errors.rating?.message}
+          error={errors.discount?.message}
           {...register("discount", { valueAsNumber: true })}
         />
         <Input
@@ -85,6 +113,10 @@ export default function SellerProductCreatePage() {
           error={errors.quantity?.message}
           {...register("quantity", { valueAsNumber: true })}
         />
+        <div className="text-right font-medium">
+          Total Price after Discount: $
+          {isNaN(showTotalPrice()) ? 0 : showTotalPrice().toFixed(2)}
+        </div>
         <Button
           type="submit"
           disabled={isSubmitting}

@@ -14,7 +14,6 @@ export function useProduct() {
       setLoading(true);
       setError(null);
       const response = await api.post("/seller/products/CreateProduct", data);
-      console.log("Product created:", response);
       toast.success("Product created successfully!");
       router.push("/seller/product");
       return response;
