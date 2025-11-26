@@ -1,6 +1,7 @@
 import { ApiError, ApiResponse } from "@/types/api";
 import Cookies from "js-cookie";
 import { STORAGE_KEYS } from "./constants";
+import { get } from "http";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
@@ -36,7 +37,7 @@ export function createApiError(
 
 export async function apiClient<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit & { params?: Record<string, string | number | boolean> }
 ): Promise<T> {
   const token =
     typeof window !== "undefined" ? Cookies.get(STORAGE_KEYS.TOKEN) : null;
@@ -81,7 +82,10 @@ export async function apiClient<T>(
 
 // Convenience methods
 export const api = {
-  get: <T>(endpoint: string) => apiClient<T>(endpoint),
+  get: <T>(endpoint: string) =>
+    apiClient<T>(endpoint, {
+      method: "GET",
+    }),
 
   post: <T>(endpoint: string, body: unknown) =>
     apiClient<T>(endpoint, {

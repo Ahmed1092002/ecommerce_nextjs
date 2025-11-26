@@ -1,15 +1,28 @@
 export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  images: string[];
-  category: string;
-  sellerId: string;
-  sellerName?: string;
-  createdAt: string;
-  updatedAt: string;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  data: [
+    {
+      id: number;
+      name: string;
+      description: string;
+      price: number;
+      quantity: number;
+      discount: number;
+      finalPrice: number;
+    }
+  ];
+}
+export interface SearchProductsParams {
+  page?: number;
+  size?: number;
+  sortedColumn?: string;
+  name?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  ascending?: boolean;
 }
 
 export interface CreateProductData {

@@ -25,7 +25,6 @@ export default function SellerProductCreatePage() {
       .string()
       .min(10, "Description must be at least 10 characters long"),
     price: z.number().min(1, "Price must be at least 1"),
-    rating: z.number().min(0).max(5),
     discount: z.number().min(0).max(100),
     quantity: z.number().min(0, "Quantity cannot be negative"),
   });
@@ -89,14 +88,7 @@ export default function SellerProductCreatePage() {
           error={errors.price?.message}
           {...register("price", { valueAsNumber: true })}
         />
-        <Input
-          label="Rating"
-          type="number"
-          placeholder="Enter product rating"
-          id="rating"
-          error={errors.rating?.message}
-          {...register("rating", { valueAsNumber: true })}
-        />
+
         <Input
           label="Discount"
           type="number"

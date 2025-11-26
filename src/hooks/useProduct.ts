@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api-client";
-import { CreateProductData } from "@/types/product";
+import { CreateProductData, Product } from "@/types/product";
 import { toast } from "react-toastify";
 export function useProduct() {
   const [Loading, setLoading] = useState<boolean>(false);
@@ -28,8 +28,34 @@ export function useProduct() {
       setLoading(false);
     }
   }
+
+  type SearchProductsParams = Record<
+    string,
+    string | number | boolean | undefined
+  >;
+
+  async function getSellerProducts(params?: SearchProductsParams) {
+    let query = "";
+    if (params) {
+      const entries = Object.entries(params).filter(([, v]) => v !== undefined);
+      if (entries.length > 0) {
+        const searchParams = new URLSearchParams();
+        for (const [k, v] of entries) {
+          searchParams.append(k, String(v));
+        }
+        query = `?${searchParams.toString()}`;
+      }
+    }
+
+    // Use the same base path as other seller product calls and append query string
+    const endpoint = `/seller/products/GetProducts${query}`;
+    const response = await api.get<Product>(endpoint);
+    return response;
+  }
+
   return {
     createProduct,
+    getSellerProducts,
     Loading,
     error,
   };
