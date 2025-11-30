@@ -26,3 +26,16 @@ export const slugify = (text: string): string => {
     .replace(/--+/g, "-")
     .trim();
 };
+export function calculateFinalPrice(price: number, discount: number): number {
+  const nPrice = Number(price) || 0;
+  const nDiscount = Number(discount) || 0;
+
+  if (!nPrice) return 0;
+  if (!nDiscount) return nPrice;
+
+  const boundedDiscount = Math.min(Math.max(nDiscount, 0), 100);
+  const discountAmount = (nPrice * boundedDiscount) / 100;
+  const total = nPrice - discountAmount;
+
+  return Math.max(0, total);
+}

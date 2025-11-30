@@ -1,7 +1,6 @@
 import { ApiError, ApiResponse } from "@/types/api";
 import Cookies from "js-cookie";
 import { STORAGE_KEYS } from "./constants";
-import { get } from "http";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";

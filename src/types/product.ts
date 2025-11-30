@@ -29,7 +29,6 @@ export interface CreateProductData {
   name: string;
   description: string;
   price: number;
-  rating: number;
   quantity: number;
   discount: number;
 }
@@ -39,6 +38,6 @@ export interface UpdateProductData {
   name?: string;
   description?: string;
   price?: number;
-  rating?: number;
   quantity?: number;
+  discount?: number;
 }

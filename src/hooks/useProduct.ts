@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api-client";
@@ -52,10 +53,49 @@ export function useProduct() {
     const response = await api.get<Product>(endpoint);
     return response;
   }
+  async function getProductById(id: string) {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get<Product>(`/products/getProductByID/${id}`);
+      return response;
+    } catch (error) {
+      let errorMessage = "An error occurred while fetching the product.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function updateProduct(data: Product) {
+    // Implementation for updating a product
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.put("/seller/products/updateproduct", data);
+      toast.success("Product updated successfully!");
+      router.push("/seller/product");
+      return response;
+    } catch (error) {
+      let errorMessage = "An error occurred while updating the product.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return {
     createProduct,
     getSellerProducts,
+    getProductById,
+    updateProduct,
     Loading,
     error,
   };
