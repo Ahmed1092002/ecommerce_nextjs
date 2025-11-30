@@ -45,7 +45,7 @@ export default function ProductSellerDetails() {
     return () => {
       mounted = false;
     };
-  }, [id, getProductById]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type } = e.target;
