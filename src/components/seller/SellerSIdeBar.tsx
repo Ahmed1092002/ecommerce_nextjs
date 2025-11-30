@@ -22,7 +22,7 @@ import {
   LogOut,
   Store,
 } from "lucide-react";
-import { Button } from "../shared/Button";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
 interface SellerSidebarProps {
@@ -31,7 +31,7 @@ interface SellerSidebarProps {
 
 export function SellerSidebar({ navItems }: SellerSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
+  // const router = useRouter();
   const { logout, User } = useAuth();
 
   // Default navigation items
@@ -77,15 +77,16 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
 
   return (
     <SidebarProvider>
-      <Sidebar className="w-64 border-r bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 shadow-xl">
+      <Sidebar className="w-64 border-r bg-sidebar text-sidebar-foreground">
         {/* Header */}
-        <SidebarHeader className="px-6 py-6 border-b border-slate-700 bg-gradient-to-r from-blue-600 to-blue-700">
+        <SidebarHeader className="px-6 py-6 border-b border-sidebar-border">
           <div className="flex flex-col gap-1">
-            <div className="text-xl font-bold text-white flex items-center gap-2">
-              🏪 <span>Seller Panel</span>
+            <div className="text-xl font-bold flex items-center gap-2">
+              <Store className="h-6 w-6" />
+              <span>Seller Panel</span>
             </div>
             {User && (
-              <div className="text-xs text-blue-100 font-medium">
+              <div className="text-xs text-muted-foreground font-medium">
                 {User.username || User.email}
               </div>
             )}
@@ -93,7 +94,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         </SidebarHeader>
 
         {/* Navigation Menu */}
-        <SidebarContent className="py-4">
+        <SidebarContent className="py-4 px-2">
           <SidebarMenu>
             {items.map((item) => {
               // Check if current path matches this item
@@ -102,20 +103,20 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
 
               return (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive}
+                    className="w-full"
+                  >
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 ${
+                      className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all ${
                         isActive
-                          ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold shadow-lg"
-                          : "text-slate-300 hover:bg-slate-700 hover:text-white hover:translate-x-1"
+                          ? "bg-primary/10 text-primary border-l-4 border-primary pl-2"
+                          : "text-muted-foreground hover:bg-secondary hover:text-foreground hover:pl-4"
                       }`}
                     >
-                      <span
-                        className={isActive ? "text-white" : "text-slate-400"}
-                      >
-                        {item.icon}
-                      </span>
+                      {item.icon}
                       <span>{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -126,13 +127,10 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         </SidebarContent>
 
         {/* Footer with Actions */}
-        <SidebarFooter className="px-4 py-4 border-t border-slate-700 space-y-2 bg-slate-900/50">
+        <SidebarFooter className="px-4 py-4 border-t border-sidebar-border space-y-2">
           {/* Back to Store Button */}
           <Link href="/products" className="block">
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-2 bg-slate-800 border-slate-600 text-slate-200 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-500 hover:text-white hover:border-blue-500 transition-all"
-            >
+            <Button variant="outline" className="w-full justify-start gap-2">
               <Store className="h-4 w-4" />
               <span>View Store</span>
             </Button>
@@ -142,7 +140,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="w-full justify-start gap-2 text-slate-300 hover:bg-red-600 hover:text-white transition-all"
+            className="w-full justify-start gap-2 hover:bg-destructive hover:text-destructive-foreground"
           >
             <LogOut className="h-4 w-4" />
             <span>Logout</span>

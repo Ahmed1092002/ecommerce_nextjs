@@ -1,75 +1,97 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, Package, ShieldCheck, Truck } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-[80vh]">
+    <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-            Welcome to Your Store! 🛍️
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Discover amazing products at unbeatable prices. Shop now and enjoy
-            fast shipping!
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/products">
-              <Button
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-orange-500 hover:text-white font-bold text-lg px-8 py-6 shadow-xl hover:shadow-2xl transition-all"
-              >
-                🛒 Shop Now
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold text-lg px-8 py-6 shadow-xl transition-all"
-              >
-                ✨ Sign Up
-              </Button>
-            </Link>
+      <section className="relative bg-secondary/30 py-20 md:py-32 overflow-hidden">
+        <div className="container px-4 md:px-6 relative z-10">
+          <div className="flex flex-col items-center text-center space-y-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+              New Collection 2025
+            </div>
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+              Elevate Your Style with{" "}
+              <span className="text-primary">Premium Essentials</span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-[700px]">
+              Discover our curated collection of high-quality products designed
+              for the modern lifestyle.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+              <Link href="/shop">
+                <Button size="lg" className="h-12 px-8 text-base">
+                  Shop Now <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-12 px-8 text-base"
+                >
+                  Learn More
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Abstract Background Elements */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-10" />
+      </section>
+
+      {/* Features Section */}
+      <section className="container px-4 md:px-6">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+            <div className="p-3 rounded-full bg-secondary mb-4">
+              <Truck className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Fast Delivery</h3>
+            <p className="text-muted-foreground">
+              Free shipping on all orders over $100.
+            </p>
+          </div>
+          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+            <div className="p-3 rounded-full bg-secondary mb-4">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Secure Payment</h3>
+            <p className="text-muted-foreground">
+              100% secure payment processing.
+            </p>
+          </div>
+          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+            <div className="p-3 rounded-full bg-secondary mb-4">
+              <Package className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-bold mb-2">Quality Guarantee</h3>
+            <p className="text-muted-foreground">
+              30-day money-back guarantee on all items.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-slate-800">
-            Why Shop With Us? ⭐
+      {/* Featured Products Placeholder */}
+      <section className="container px-4 md:px-6">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold tracking-tight">
+            Featured Products
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all hover:scale-105 border-t-4 border-blue-500">
-              <div className="text-5xl mb-4">🚚</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">
-                Fast Delivery
-              </h3>
-              <p className="text-slate-600">
-                Get your orders delivered quickly and safely to your doorstep.
-              </p>
-            </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all hover:scale-105 border-t-4 border-orange-500">
-              <div className="text-5xl mb-4">💎</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">
-                Quality Products
-              </h3>
-              <p className="text-slate-600">
-                We guarantee the best quality products from trusted sellers.
-              </p>
-            </div>
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all hover:scale-105 border-t-4 border-blue-500">
-              <div className="text-5xl mb-4">🔒</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">
-                Secure Payment
-              </h3>
-              <p className="text-slate-600">
-                Shop with confidence using our secure payment methods.
-              </p>
-            </div>
+          <Link href="/shop">
+            <Button variant="ghost">
+              View All <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* Placeholder for ProductCards - In a real app, map through products here */}
+          <div className="col-span-full text-center py-12 text-muted-foreground border border-dashed rounded-lg">
+            Product Grid will appear here
           </div>
         </div>
       </section>

@@ -21,41 +21,61 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="hover:shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-transparent hover:border-blue-500">
-      <CardHeader className="p-0">
-        <Link href={`/products/${product.id}`}>
-          <div className="h-48 bg-gradient-to-br from-blue-50 to-orange-50 rounded-t-lg flex items-center justify-center text-slate-400 font-medium hover:from-blue-100 hover:to-orange-100 transition-all">
-            {product.images?.[0] ? "📦 Image" : "📦 No Image"}
+    <Card className="group overflow-hidden border-none shadow-none hover:shadow-lg transition-all duration-300">
+      <CardHeader className="p-0 relative">
+        <Link
+          href={`/products/${product.id}`}
+          className="block overflow-hidden"
+        >
+          <div className="aspect-square bg-secondary/50 flex items-center justify-center text-muted-foreground group-hover:scale-105 transition-transform duration-500 relative">
+            {product.images?.[0] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-sm font-medium">No Image</span>
+            )}
+
+            {/* Quick View Overlay */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+              >
+                Quick View
+              </Button>
+            </div>
           </div>
         </Link>
       </CardHeader>
 
       <CardContent className="p-4">
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold truncate hover:text-blue-600 transition-colors">
+          <h3 className="font-medium truncate hover:underline underline-offset-4">
             {product.name}
           </h3>
         </Link>
-        <p className="text-xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent mt-2">
-          {formatPrice(product.price)}
-        </p>
-        {product.stock < 5 && product.stock > 0 && (
-          <Badge
-            variant="outline"
-            className="mt-2 border-orange-500 text-orange-600 hover:bg-orange-50"
-          >
-            ⚡ Only {product.stock} left
-          </Badge>
-        )}
+        <div className="mt-2 flex items-center justify-between">
+          <p className="font-bold">{formatPrice(product.price)}</p>
+          {product.stock < 5 && product.stock > 0 && (
+            <Badge variant="destructive" className="text-xs px-1.5 py-0 h-5">
+              Low Stock
+            </Badge>
+          )}
+        </div>
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
         <Button
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold transition-all"
+          className="w-full"
           disabled={product.stock === 0}
-          variant={product.stock === 0 ? "outline" : "default"}
+          variant={product.stock === 0 ? "secondary" : "default"}
         >
-          {product.stock === 0 ? "❌ Out of Stock" : "🛒 Add to Cart"}
+          {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
         </Button>
       </CardFooter>
     </Card>

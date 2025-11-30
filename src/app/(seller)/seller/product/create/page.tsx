@@ -112,7 +112,8 @@ export default function SellerProductCreatePage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          variant="default"
+          className="w-full bg-primary"
         >
           {isSubmitting ? "Creating..." : "Create Product"}
         </Button>

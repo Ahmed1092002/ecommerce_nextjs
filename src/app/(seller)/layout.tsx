@@ -18,7 +18,7 @@ export default function SellerLayout({
   return (
     <div className="min-h-screen flex">
       <SellerSidebar navItems={navItems} />
-      <main className="flex-1 bg-gray-50 p-6">{children}</main>
+      <main className="flex-1 bg-background p-6">{children}</main>
     </div>
   );
 }

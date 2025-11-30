@@ -11,13 +11,7 @@ export default function SellerProductPage() {
             Seller Product Page
           </h1>
           <Link href="/seller/product/create">
-            <Button
-              className={
-                "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-              }
-            >
-              Add New Product
-            </Button>
+            <Button>Add New Product</Button>
           </Link>
         </div>
 

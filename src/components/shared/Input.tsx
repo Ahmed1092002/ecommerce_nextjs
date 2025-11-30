@@ -15,7 +15,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <Label
             htmlFor={props.id || props.name}
-            className={error ? "text-red-500" : "text-slate-700 font-medium"}
+            className={
+              error ? "text-destructive" : "text-foreground font-medium"
+            }
           >
             {label}
           </Label>
@@ -24,10 +26,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
           className={cn(
-            "transition-all duration-200 focus:ring-2",
+            "transition-all duration-200",
             error
-              ? "border-red-500 focus-visible:ring-red-500"
-              : "border-slate-300 focus:border-blue-500 focus-visible:ring-blue-500",
+              ? "border-destructive focus-visible:ring-destructive"
+              : "border-input focus-visible:ring-ring",
             className
           )}
           aria-invalid={error ? "true" : "false"}
@@ -38,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {error && (
           <p
             id={`${props.id || props.name}-error`}
-            className="text-sm text-red-500 mt-1"
+            className="text-sm text-destructive mt-1"
             role="alert"
           >
             {error}

@@ -5,14 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/shared/Input";
-import { Button } from "@/components/shared/Button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -40,25 +38,23 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       await registerFunction(data as RegisterData);
-    } catch (error) {
+    } catch {
       // Error is already handled by useAuth hook and set in error state
-      // No need to do anything here, the error will be displayed automatically
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      {/* Show API error from useAuth hook */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && (
-        <div className="p-4 text-sm text-red-600 bg-red-50 border-l-4 border-red-500 rounded-lg shadow-sm animate-shake">
-          ❌ {error}
+        <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+          {error}
         </div>
       )}
 
       <Input
         label="Email"
         type="email"
-        placeholder="Enter your email"
+        placeholder="name@example.com"
         id="email"
         error={errors.email?.message}
         {...register("email")}
@@ -66,7 +62,7 @@ export default function RegisterPage() {
 
       <Input
         label="Username"
-        placeholder="Enter your username"
+        placeholder="johndoe"
         id="username"
         error={errors.username?.message}
         {...register("username")}
@@ -75,65 +71,60 @@ export default function RegisterPage() {
       <Input
         label="Password"
         type="password"
-        placeholder="Enter your password"
+        placeholder="Create a password"
         id="password"
         error={errors.password?.message}
         {...register("password")}
       />
 
       <div className="space-y-2">
-        <label
-          htmlFor="userType"
-          className="text-sm font-semibold text-slate-700"
-        >
-          👤 Account Type
-        </label>
-        <Select
+        <Label htmlFor="userType">Account Type</Label>
+        {/* The RadioGroup replaces the Select component */}
+        <RadioGroup
+          id="userType"
+          // Set the current value from React Hook Form's 'userType'
           value={userType}
+          // Update the value using React Hook Form's 'setValue' when a radio button is clicked
           onValueChange={(value) =>
             setValue("userType", value as "CUSTOMER" | "SELLER")
           }
+          // Optional: Add a class to space the radio buttons out horizontally
+          className="flex space-x-4"
         >
-          <SelectTrigger
-            id="userType"
-            className="border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all"
-          >
-            <SelectValue placeholder="Select account type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="CUSTOMER" className="hover:bg-blue-50">
-              🛍️ Customer
-            </SelectItem>
-            <SelectItem value="SELLER" className="hover:bg-orange-50">
-              🏪 Seller
-            </SelectItem>
-          </SelectContent>
-        </Select>
+          {/* First Radio Button: Customer */}
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="CUSTOMER" id="customer" />
+            <Label htmlFor="customer">Customer</Label>
+          </div>
+
+          {/* Second Radio Button: Seller */}
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="SELLER" id="seller" />
+            <Label htmlFor="seller">Seller</Label>
+          </div>
+        </RadioGroup>
+
+        {/* Keep the error message */}
         {errors.userType && (
-          <p className="text-sm text-red-500 font-medium">
-            ❌ {errors.userType.message}
+          <p className="text-sm text-destructive font-medium">
+            {errors.userType.message}
           </p>
         )}
       </div>
-
-      <Button
-        type="submit"
-        isLoading={isSubmitting}
-        loadingText="Creating your account..."
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all"
-      >
-        ✨ Create Account
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Create Account
       </Button>
 
-      <p className="text-center text-sm text-slate-600 mt-4">
+      <div className="text-center text-sm">
         Already have an account?{" "}
-        <a
+        <Link
           href="/login"
-          className="text-blue-600 hover:text-orange-500 font-semibold transition-colors"
+          className="font-medium text-primary hover:underline"
         >
-          Login here
-        </a>
-      </p>
+          Sign in
+        </Link>
+      </div>
     </form>
   );
 }
