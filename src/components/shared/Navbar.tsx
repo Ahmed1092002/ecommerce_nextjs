@@ -29,7 +29,9 @@ export function Navbar() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight">E-STORE</span>
+            <span className="text-xl font-bold tracking-tight text-(--primary)">
+              E-STORE
+            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link href="/" className="transition-colors hover:text-primary">
@@ -61,6 +63,7 @@ export function Navbar() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
+              variant={"search"}
               placeholder="Search products..."
               className="w-64 pl-9 rounded-full bg-secondary/50 border-none focus-visible:ring-1"
             />

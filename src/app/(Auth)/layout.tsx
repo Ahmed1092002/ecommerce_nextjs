@@ -16,7 +16,7 @@ export default function AuthLayout({
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex flex-col justify-between bg-zinc-900 p-10 text-white">
+      <div className="hidden lg:flex flex-col justify-between bg-[var(--primary)] p-10 text-white">
         <div className="flex items-center gap-2 text-lg font-bold">
           <Store className="h-6 w-6" />
           <span>Acme Store</span>
@@ -26,15 +26,8 @@ export default function AuthLayout({
             "The best e-commerce platform for all your needs. Quality products,
             fast delivery, and excellent support."
           </h1>
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-zinc-700" />
-            <div>
-              <p className="font-semibold">Sofia Davis</p>
-              <p className="text-sm text-zinc-400">Verified Customer</p>
-            </div>
-          </div>
         </div>
-        <div className="text-sm text-zinc-500">
+        <div className="text-sm text-white/80">
           © 2024 Acme Inc. All rights reserved.
         </div>
       </div>

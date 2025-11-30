@@ -45,6 +45,7 @@ export default function LoginPage() {
       <Input
         label="Login"
         placeholder="name@example.com"
+        variant="default"
         id="login"
         error={errors.login?.message}
         {...register("login")}
@@ -54,6 +55,7 @@ export default function LoginPage() {
         <Input
           label="Password"
           type="password"
+          variant="default"
           placeholder="Enter your password"
           id="password"
           error={errors.password?.message}

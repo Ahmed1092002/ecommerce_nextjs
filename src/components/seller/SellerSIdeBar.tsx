@@ -76,11 +76,11 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
   };
 
   return (
-    <SidebarProvider>
-      <Sidebar className="w-64 border-r bg-sidebar text-sidebar-foreground">
+    <SidebarProvider className="border-r border-(--sidebar-border)">
+      <Sidebar className="w-64  border-none bg-sidebar text-sidebar-foreground">
         {/* Header */}
-        <SidebarHeader className="px-6 py-6 border-b border-sidebar-border">
-          <div className="flex flex-col gap-1">
+        <SidebarHeader className="px-6 py-6  border-none border-sidebar-border bg-[var(--primary)] ">
+          <div className="flex flex-col gap-1 text-white">
             <div className="text-xl font-bold flex items-center gap-2">
               <Store className="h-6 w-6" />
               <span>Seller Panel</span>
@@ -94,7 +94,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         </SidebarHeader>
 
         {/* Navigation Menu */}
-        <SidebarContent className="py-4 px-2">
+        <SidebarContent className="py-4 px-2 ">
           <SidebarMenu>
             {items.map((item) => {
               // Check if current path matches this item
@@ -112,7 +112,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all ${
                         isActive
-                          ? "bg-primary/10 text-primary border-l-4 border-primary pl-2"
+                          ? "bg-[var(--primary)]/10 text-[var(--primary)] border-l-4 border-[var(--primary)] pl-2"
                           : "text-muted-foreground hover:bg-secondary hover:text-foreground hover:pl-4"
                       }`}
                     >
@@ -127,7 +127,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         </SidebarContent>
 
         {/* Footer with Actions */}
-        <SidebarFooter className="px-4 py-4 border-t border-sidebar-border space-y-2">
+        <SidebarFooter className="px-4 py-4 border-t border-[var(--sidebar-border)] space-y-2">
           {/* Back to Store Button */}
           <Link href="/products" className="block">
             <Button variant="outline" className="w-full justify-start gap-2">

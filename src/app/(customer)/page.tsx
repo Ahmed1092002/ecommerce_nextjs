@@ -12,7 +12,7 @@ export default function HomePage() {
             <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
               New Collection 2025
             </div>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl text-(--primary)">
               Elevate Your Style with{" "}
               <span className="text-primary">Premium Essentials</span>
             </h1>
@@ -46,30 +46,30 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="container px-4 md:px-6">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="features_card">
             <div className="p-3 rounded-full bg-secondary mb-4">
               <Truck className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">Fast Delivery</h3>
-            <p className="text-muted-foreground">
+            <p className="text-(--muted-foreground)">
               Free shipping on all orders over $100.
             </p>
           </div>
-          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="features_card">
             <div className="p-3 rounded-full bg-secondary mb-4">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">Secure Payment</h3>
-            <p className="text-muted-foreground">
+            <p className="text-(--muted-foreground)">
               100% secure payment processing.
             </p>
           </div>
-          <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="features_card">
             <div className="p-3 rounded-full bg-secondary mb-4">
               <Package className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-bold mb-2">Quality Guarantee</h3>
-            <p className="text-muted-foreground">
+            <p className="text-(--muted-foreground)">
               30-day money-back guarantee on all items.
             </p>
           </div>
@@ -79,11 +79,11 @@ export default function HomePage() {
       {/* Featured Products Placeholder */}
       <section className="container px-4 md:px-6">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold tracking-tight">
+          <h2 className="text-3xl font-bold tracking-tight text-(--primary)">
             Featured Products
           </h2>
           <Link href="/shop">
-            <Button variant="ghost">
+            <Button variant="destructive">
               View All <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>

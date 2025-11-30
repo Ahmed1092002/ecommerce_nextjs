@@ -70,9 +70,9 @@ export function SellerProductList() {
       const res = (await getSellerProducts(
         params
       )) as unknown as PaginatedProducts;
-      setItems(res?.data || []);
-      setTotalPages(res?.totalPages ?? 1);
-      setPage(res?.pageNumber ?? p);
+      setItems(res?.data);
+      setTotalPages(res?.totalPages);
+      setPage(res?.pageNumber);
     } catch (err) {
       console.error("Failed to load seller products", err);
     } finally {
@@ -82,29 +82,23 @@ export function SellerProductList() {
 
   useEffect(() => {
     load(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    load(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   return (
     <div className="space-y-6">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col">
+        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col border-[var(--border)]">
           <span className="text-sm text-muted-foreground">Total Products</span>
           <span className="text-2xl font-bold">{items.length}</span>
         </div>
-        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col">
+        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col border-[var(--border)]">
           <span className="text-sm text-muted-foreground">Active Listings</span>
           <span className="text-2xl font-bold">
             {items.filter((i) => (i.quantity || 0) > 0).length}
           </span>
         </div>
-        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col">
+        <div className="bg-card p-4 rounded-lg border shadow-sm flex flex-col border-[var(--border)]">
           <span className="text-sm text-muted-foreground">Low Stock</span>
           <span className="text-2xl font-bold text-orange-500">
             {items.filter((i) => (i.quantity || 0) < 5).length}
@@ -113,7 +107,7 @@ export function SellerProductList() {
       </div>
 
       {/* Filter Section */}
-      <div className="bg-card p-6 rounded-lg border shadow-sm">
+      <div className="bg-card p-6 rounded-lg border shadow-sm border-[var(--border)]">
         <div className="mb-4">
           <h2 className="text-lg font-semibold">Filter Products</h2>
           <p className="text-sm text-muted-foreground">
@@ -145,7 +139,7 @@ export function SellerProductList() {
                   <SelectTrigger className="flex-1">
                     <SelectValue placeholder="Select column" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-amber-50 border border-[var(--border)]">
                     <SelectItem value="name">Name</SelectItem>
                     <SelectItem value="price">Price</SelectItem>
                     <SelectItem value="createdAt">Created At</SelectItem>
@@ -193,7 +187,7 @@ export function SellerProductList() {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 justify-end border-t pt-4">
+          <div className="flex gap-2 justify-end border-t border-[var(--border)] pt-4">
             <Button
               type="button"
               variant="ghost"

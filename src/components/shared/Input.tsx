@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  variant?: "default" | "outline" | "filled" | "ghost" | "secondary" | "search";
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, className, ...props }, ref) => {
+  ({ label, error, variant = "default", className, ...props }, ref) => {
     return (
       <div className="space-y-2">
         {label && (
@@ -24,6 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <ShadcnInput
           ref={ref}
+          variant={variant}
           {...props}
           className={cn(
             "transition-all duration-200",
