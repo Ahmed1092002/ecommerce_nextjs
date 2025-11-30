@@ -1,6 +1,6 @@
 // SellerProductList component with loading skeletons and proper imports
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { useProduct } from "@/hooks/useProduct";
 import {
@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 type ApiItem = {
   id: number | string;
@@ -42,6 +43,7 @@ type PaginatedProducts = {
 };
 
 export function SellerProductList() {
+  const router = useRouter();
   const { getSellerProducts } = useProduct();
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(8);
@@ -222,6 +224,9 @@ export function SellerProductList() {
         ) : (
           items.map((it) => (
             <ProductCard
+              buttonTitle="Product details"
+              onButtonClick={() => router.push(`/seller/product/${it.id}`)}
+              link="/seller/product/"
               key={String(it.id)}
               product={{
                 id: String(it.id),

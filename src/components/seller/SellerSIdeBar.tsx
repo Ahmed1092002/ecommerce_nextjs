@@ -21,6 +21,7 @@ import {
   Settings,
   LogOut,
   Store,
+  User2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -131,8 +132,8 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
           {/* Back to Store Button */}
           <Link href="/products" className="block">
             <Button variant="outline" className="w-full justify-start gap-2">
-              <Store className="h-4 w-4" />
-              <span>View Store</span>
+              <User2 className="h-4 w-4" />
+              <span>Profile</span>
             </Button>
           </Link>
 
