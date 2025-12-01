@@ -8,9 +8,11 @@ type ValidationErrors = Partial<Record<keyof UpdateProductData, string>>;
 interface ProductEditFormProps {
   product: UpdateProductData;
   errors: ValidationErrors;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onCancel: () => void;
+  setProduct: React.Dispatch<React.SetStateAction<UpdateProductData | null>>;
+  setErrors: React.Dispatch<React.SetStateAction<ValidationErrors>>;
+  updateProduct: (data: UpdateProductData) => Promise<void>;
+  setMode: React.Dispatch<React.SetStateAction<"view" | "edit">>;
 }
 export const productValidationSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long"),
@@ -45,24 +47,54 @@ export function validateProduct(product: unknown) {
 export function ProductEditForm({
   product,
   errors,
-  onInputChange,
-  onSubmit,
+  setProduct,
+  setErrors,
+  updateProduct,
   onCancel,
+  setMode,
 }: ProductEditFormProps) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value, type } = e.target;
+    setProduct((prev) => {
+      if (!prev) return null;
+      const newValue = type === "number" ? Number(value) : value;
+      return { ...prev, [id]: newValue };
+    });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!product) return;
+
+    const validationResult = validateProduct(product);
+
+    if (!validationResult.success) {
+      setErrors(validationResult.errors);
+      return;
+    }
+
+    try {
+      await updateProduct(product as UpdateProductData);
+      setMode("view");
+      setErrors({});
+    } catch (err) {
+      console.error("Update failed:", err);
+    }
+  };
   const finalPrice = calculateFinalPrice(
     product.price || 0,
     product.discount || 0
   );
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={handleEditSubmit} className="space-y-6">
       <h2 className="text-2xl font-semibold mb-4">Editing {product.name}</h2>
 
       <Input
         label="Product Name"
         id="name"
         value={product.name}
-        onChange={onInputChange}
+        onChange={handleInputChange}
         error={errors.name}
       />
 
@@ -70,7 +102,7 @@ export function ProductEditForm({
         label="Description"
         id="description"
         value={product.description}
-        onChange={onInputChange}
+        onChange={handleInputChange}
         error={errors.description}
       />
 
@@ -80,7 +112,7 @@ export function ProductEditForm({
           type="number"
           id="price"
           value={product.price}
-          onChange={onInputChange}
+          onChange={handleInputChange}
           error={errors.price}
         />
         <Input
@@ -88,7 +120,7 @@ export function ProductEditForm({
           type="number"
           id="discount"
           value={product.discount}
-          onChange={onInputChange}
+          onChange={handleInputChange}
           error={errors.discount}
         />
         <Input
@@ -96,7 +128,7 @@ export function ProductEditForm({
           type="number"
           id="quantity"
           value={product.quantity}
-          onChange={onInputChange}
+          onChange={handleInputChange}
           error={errors.quantity}
         />
       </div>

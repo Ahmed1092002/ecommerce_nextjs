@@ -47,35 +47,6 @@ export default function ProductSellerDetails() {
     };
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value, type } = e.target;
-    setProduct((prev) => {
-      if (!prev) return null;
-      const newValue = type === "number" ? Number(value) : value;
-      return { ...prev, [id]: newValue };
-    });
-  };
-
-  const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!product) return;
-
-    const validationResult = validateProduct(product);
-
-    if (!validationResult.success) {
-      setErrors(validationResult.errors);
-      return;
-    }
-
-    try {
-      await updateProduct(product as UpdateProductData);
-      setMode("view");
-      setErrors({});
-    } catch (err) {
-      console.error("Update failed:", err);
-    }
-  };
-
   const toggleMode = () => {
     setMode((prev) => (prev === "view" ? "edit" : "view"));
     if (mode === "edit") setErrors({});
@@ -119,8 +90,12 @@ export default function ProductSellerDetails() {
         <ProductEditForm
           product={product}
           errors={errors}
-          onInputChange={handleInputChange}
-          onSubmit={handleEditSubmit}
+          setProduct={setProduct}
+          setErrors={setErrors}
+          updateProduct={async (data: UpdateProductData) => {
+            await updateProduct(data as any);
+          }}
+          setMode={setMode}
           onCancel={toggleMode}
         />
       )}
