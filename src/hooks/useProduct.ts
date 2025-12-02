@@ -53,6 +53,27 @@ export function useProduct() {
     const response = await api.get<Product>(endpoint);
     return response;
   }
+
+    async function getCustomerProducts(params?: SearchProductsParams) {
+      let query = "";
+      if (params) {
+        const entries = Object.entries(params).filter(
+          ([, v]) => v !== undefined
+        );
+        if (entries.length > 0) {
+          const searchParams = new URLSearchParams();
+          for (const [k, v] of entries) {
+            searchParams.append(k, String(v));
+          }
+          query = `?${searchParams.toString()}`;
+        }
+      }
+
+      // Use the same base path as other seller product calls and append query string
+      const endpoint = `/customer/products/GetProducts${query}`;
+      const response = await api.get<Product>(endpoint);
+      return response;
+    }
   async function getProductById(id: string) {
     try {
       setLoading(true);
@@ -98,5 +119,6 @@ export function useProduct() {
     updateProduct,
     Loading,
     error,
+    getCustomerProducts
   };
 }

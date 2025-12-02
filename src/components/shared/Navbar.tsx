@@ -5,8 +5,11 @@ import { Search, ShoppingCart, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 export function Navbar() {
+  const { logout } = useAuth();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   React.useEffect(() => {
@@ -20,7 +23,7 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-all duration-300 flex justify-center items-center",
+        "sticky top-0 z-50 w-full border-b transition-all duration-300 flex justify-center items-center border-[var(--border)]",
         isScrolled
           ? "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-sm"
           : "bg-background border-transparent"
@@ -69,13 +72,22 @@ export function Navbar() {
             />
           </div>
 
-          <Button variant="ghost" size="icon" className="relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={() => router.push("/cart")}
+          >
             <ShoppingCart className="h-5 w-5" />
             <span className="sr-only">Cart</span>
             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
 
           <Button variant="ghost" size="icon">
+            <User className="h-5 w-5" />
+            <span className="sr-only">Account</span>
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => logout()}>
             <User className="h-5 w-5" />
             <span className="sr-only">Account</span>
           </Button>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t bg-background flex justify-center items-center">
+    <footer className="w-full border-t border-[var(--border)] bg-background flex justify-center items-center">
       <div className="container px-4 md:px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">

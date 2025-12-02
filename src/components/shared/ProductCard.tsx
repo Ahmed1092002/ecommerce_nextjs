@@ -9,11 +9,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/utils/helpers";
-import { StarIcon } from "lucide-react"; // Assuming you have lucide-react for icons
+import { ShoppingCart, StarIcon } from "lucide-react"; // Assuming you have lucide-react for icons
 
 interface ProductCardProps {
   buttonTitle?: string;
   onButtonClick?: () => void;
+  onAddToCartClick?: () => void;
+  showAddToCartButton?: boolean;
   link?: string;
   product: {
     id: string;
@@ -29,6 +31,8 @@ export function ProductCard({
   product,
   buttonTitle,
   onButtonClick,
+  onAddToCartClick,
+  showAddToCartButton = true, 
   link = "/products/",
 }: ProductCardProps) {
   // Determine if product is out of stock for conditional styling/text
@@ -74,6 +78,15 @@ export function ProductCard({
           >
             Low Stock
           </Badge>
+        )}
+        {showAddToCartButton && (
+          <Button
+            variant="default"
+            className="absolute right-2 top-2 px-2 py-0.5 text-xs cursor-pointer"
+            onClick={onAddToCartClick}
+          >
+           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+          </Button>
         )}
         {isOutOfStock && (
           <Badge

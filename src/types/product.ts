@@ -15,6 +15,12 @@ export interface Product {
     }
   ];
 }
+interface PaginatedProducts {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+}
 export interface SearchProductsParams {
   page?: number;
   size?: number;

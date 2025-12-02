@@ -39,7 +39,6 @@ type PaginatedProducts = {
   pageSize: number;
   totalPages: number;
   totalElements: number;
-  data: ApiItem[];
 };
 
 export function SellerProductList() {
@@ -226,7 +225,7 @@ export function SellerProductList() {
             <ProductCard
               buttonTitle="Product details"
               onButtonClick={() => router.push(`/seller/product/${it.id}`)}
-              link="/seller/product/"
+              link={`/seller/product/${it.id}`}
               key={String(it.id)}
               product={{
                 id: String(it.id),

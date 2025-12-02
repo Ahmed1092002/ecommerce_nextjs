@@ -1,21 +1,22 @@
 export interface CartItem {
-  id: string;
-  productId: string;
-  productName: string;
-  productImage: string;
+  cartItemId: number;
+  name: string;
   price: number;
+  productId: number;
   quantity: number;
-  stock: number;
+  totalPrice: number;
 }
 
 export interface Cart {
-  items: CartItem[];
-  total: number;
-  itemCount: number;
+  cartItems: CartItem[];
+  totalCartPrice: number;
+  totalDiscount: number;
+  totalItems: number;
+  totalQuantity: number;
 }
 
 export interface AddToCartData {
-  productId: string;
+  productId: number;
   quantity: number;
 }
 

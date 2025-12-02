@@ -21,7 +21,7 @@ export default function HomePage() {
               for the modern lifestyle.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Link href="/shop">
+              <Link href="/product">
                 <Button size="lg" className="h-12 px-8 text-base">
                   Shop Now <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
