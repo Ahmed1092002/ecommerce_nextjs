@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { Search, ShoppingCart, User, Menu } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 export function Navbar() {
-  const { logout } = useAuth();
+  const { logout, User: user } = useAuth();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -87,10 +87,12 @@ export function Navbar() {
             <User className="h-5 w-5" />
             <span className="sr-only">Account</span>
           </Button>
-          <Button variant="ghost" size="icon" onClick={() => logout()}>
-            <User className="h-5 w-5" />
-            <span className="sr-only">Account</span>
-          </Button>
+          {user && (
+            <Button variant="ghost" size="icon" onClick={() => logout()}>
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Account</span>
+            </Button>
+          )}
 
           <Sheet>
             <SheetTrigger asChild>

@@ -227,6 +227,7 @@ export function SellerProductList() {
               onButtonClick={() => router.push(`/seller/product/${it.id}`)}
               link={`/seller/product/${it.id}`}
               key={String(it.id)}
+              showAddToCartButton={false}
               product={{
                 id: String(it.id),
                 name: it.name,

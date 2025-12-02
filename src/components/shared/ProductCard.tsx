@@ -32,7 +32,7 @@ export function ProductCard({
   buttonTitle,
   onButtonClick,
   onAddToCartClick,
-  showAddToCartButton = true, 
+  showAddToCartButton = true,
   link = "/products/",
 }: ProductCardProps) {
   // Determine if product is out of stock for conditional styling/text
@@ -70,32 +70,33 @@ export function ProductCard({
           </Button>
         </div>
 
-        {/* Stock Badge (optional: if you want it over the image) */}
-        {product.stock < 5 && product.stock > 0 && (
-          <Badge
-            variant="default"
-            className="absolute right-2 top-2 px-2 py-0.5 text-xs"
-          >
-            Low Stock
-          </Badge>
-        )}
-        {showAddToCartButton && (
-          <Button
-            variant="default"
-            className="absolute right-2 top-2 px-2 py-0.5 text-xs cursor-pointer"
-            onClick={onAddToCartClick}
-          >
-           <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
-          </Button>
-        )}
-        {isOutOfStock && (
-          <Badge
-            variant="secondary"
-            className="absolute right-2 top-2 bg-gray-700 text-white px-2 py-0.5 text-xs"
-          >
-            Out of Stock
-          </Badge>
-        )}
+        <div>
+          {product.stock < 5 && product.stock > 0 && (
+            <Badge
+              variant="default"
+              className="absolute right-2 top-2 px-2 py-0.5 text-xs"
+            >
+              Low Stock
+            </Badge>
+          )}
+          {showAddToCartButton && (
+            <Button
+              variant="default"
+              className="absolute right-2 top-2 px-2 py-0.5 text-xs cursor-pointer"
+              onClick={onAddToCartClick}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+            </Button>
+          )}
+          {isOutOfStock && (
+            <Badge
+              variant="secondary"
+              className="absolute right-2 top-2 bg-gray-700 text-white px-2 py-0.5 text-xs"
+            >
+              Out of Stock
+            </Badge>
+          )}
+        </div>
       </CardHeader>
 
       {/* Product Details */}
