@@ -2,23 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080/api";
 
-// GET product by ID
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = params;
+    const body = await request.json();
     const token = request.cookies.get("token")?.value;
 
     const response = await fetch(
-      `${BACKEND_URL}/products/getProductByID/${id}`,
+      `${BACKEND_URL}/seller/products/updateproduct`,
       {
-        method: "GET",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           ...(token && { Authorization: `Bearer ${token}` }),
         },
+        body: JSON.stringify(body),
       }
     );
 
@@ -30,12 +27,12 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching product:", error);
+    console.error("Error updating product:", error);
     return NextResponse.json(
       {
         success: false,
         error: "INTERNAL_ERROR",
-        message: "Failed to fetch product",
+        message: "Failed to update product",
         statusCode: 500,
       },
       { status: 500 }

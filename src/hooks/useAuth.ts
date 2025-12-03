@@ -9,7 +9,7 @@ import { ApiErrorWithField } from "@/lib/api-client";
 import { toast } from "react-toastify";
 
 export function useAuth() {
-  const [User, setUser] = useState<AuthResponse | null>(null);
+  const [User, setUser] = useState<Omit<AuthResponse, "token"> | null>(null);
   const [Loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -19,10 +19,12 @@ export function useAuth() {
       setLoading(true);
       setError(null);
       const res = await api.post<AuthResponse>("/auth/login", loginData);
-      auth.setToken(res.token);
+      // Token is now in httpOnly cookie (set by API route)
+      // Only store non-sensitive user data client-side
       auth.setUser(res);
       auth.setRole(res.userType);
-      setUser(res);
+      const { token: _token, ...userWithoutToken } = res;
+      setUser(userWithoutToken);
       toast.success("Login successful!");
       if (res.userType === "SELLER") {
         router.push("/seller/dashboard");
@@ -68,10 +70,12 @@ export function useAuth() {
       setLoading(true);
       setError(null);
       const res = await api.post<AuthResponse>("/auth/register", registerData);
-      auth.setToken(res.token);
+      // Token is now in httpOnly cookie (set by API route)
+      // Only store non-sensitive user data client-side
       auth.setUser(res);
       auth.setRole(res.userType);
-      setUser(res);
+      const { token: _token, ...userWithoutToken } = res;
+      setUser(userWithoutToken);
       if (res.userType === "SELLER") {
         router.push("/seller/dashboard");
       } else {

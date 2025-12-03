@@ -14,7 +14,7 @@ export function useProduct() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post("/seller/products/CreateProduct", data);
+      const response = await api.post("/products/create", data);
       toast.success("Product created successfully!");
       router.push("/seller/product");
       return response;
@@ -49,36 +49,34 @@ export function useProduct() {
     }
 
     // Use the same base path as other seller product calls and append query string
-    const endpoint = `/seller/products/GetProducts${query}`;
+    const endpoint = `/products/seller${query}`;
     const response = await api.get<Product>(endpoint);
     return response;
   }
 
-    async function getCustomerProducts(params?: SearchProductsParams) {
-      let query = "";
-      if (params) {
-        const entries = Object.entries(params).filter(
-          ([, v]) => v !== undefined
-        );
-        if (entries.length > 0) {
-          const searchParams = new URLSearchParams();
-          for (const [k, v] of entries) {
-            searchParams.append(k, String(v));
-          }
-          query = `?${searchParams.toString()}`;
+  async function getCustomerProducts(params?: SearchProductsParams) {
+    let query = "";
+    if (params) {
+      const entries = Object.entries(params).filter(([, v]) => v !== undefined);
+      if (entries.length > 0) {
+        const searchParams = new URLSearchParams();
+        for (const [k, v] of entries) {
+          searchParams.append(k, String(v));
         }
+        query = `?${searchParams.toString()}`;
       }
-
-      // Use the same base path as other seller product calls and append query string
-      const endpoint = `/customer/products/GetProducts${query}`;
-      const response = await api.get<Product>(endpoint);
-      return response;
     }
+
+    // Use the same base path as other seller product calls and append query string
+    const endpoint = `/products/customer${query}`;
+    const response = await api.get<Product>(endpoint);
+    return response;
+  }
   async function getProductById(id: string) {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get<Product>(`/products/getProductByID/${id}`);
+      const response = await api.get<Product>(`/products/${id}`);
       return response;
     } catch (error) {
       let errorMessage = "An error occurred while fetching the product.";
@@ -96,7 +94,7 @@ export function useProduct() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.put("/seller/products/updateproduct", data);
+      const response = await api.put("/products/update", data);
       toast.success("Product updated successfully!");
       router.push("/seller/product");
       return response;
@@ -119,6 +117,6 @@ export function useProduct() {
     updateProduct,
     Loading,
     error,
-    getCustomerProducts
+    getCustomerProducts,
   };
 }

@@ -5,7 +5,6 @@ const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080/api";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log("Login request body:", body);
 
     const response = await fetch(`${BACKEND_URL}/auth/login`, {
       method: "POST",
@@ -21,12 +20,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data, { status: response.status });
     }
     const res = NextResponse.json(data);
-    res.cookies.set("token", data.data.token, {
+    res.cookies.set("token", data.token, {
       httpOnly: true,
       sameSite: "lax",
+      secure: true,
       path: "/",
     });
-    res.cookies.set("role", data.data.userType, {
+    res.cookies.set("role", data.userType, {
       httpOnly: false,
       sameSite: "lax",
       path: "/",
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
 
     return res;
   } catch (error) {
+    console.error("Login API route error:", error);
     return NextResponse.json(
       {
         success: false,

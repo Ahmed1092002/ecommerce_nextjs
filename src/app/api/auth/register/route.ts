@@ -21,12 +21,12 @@ export async function POST(request: NextRequest) {
     }
 
     const res = NextResponse.json(data);
-    res.cookies.set("token", data.data.token, {
+    res.cookies.set("token", data.token, {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
     });
-    res.cookies.set("role", data.data.userType, {
+    res.cookies.set("role", data.userType, {
       httpOnly: false,
       sameSite: "lax",
       path: "/",

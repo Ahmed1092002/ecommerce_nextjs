@@ -3,47 +3,50 @@ import { STORAGE_KEYS } from "./constants";
 import Cookies from "js-cookie";
 
 export const auth = {
-  // Save token to localStorage
-  setToken: (token: string): void => {
+  // ⚠️ Token is now stored in httpOnly cookies by API routes
+  // We no longer store it client-side for security
+
+  // Get token from httpOnly cookie (for checking if authenticated)
+  // Note: We can't actually read the token value, but we can check if it exists
+  getToken: (): string | null => {
     if (typeof window !== "undefined") {
-      Cookies.set(STORAGE_KEYS.TOKEN, token);
+      // We can read the 'role' cookie to infer if user is authenticated
+      // The actual token is in httpOnly cookie (not accessible to JS)
+      return Cookies.get(STORAGE_KEYS.ROLE) ? "exists" : null;
     }
+    return null;
   },
+
+  // Role management (non-sensitive, can be client-side)
   setRole: (role: string): void => {
     if (typeof window !== "undefined") {
       Cookies.set(STORAGE_KEYS.ROLE, role);
     }
   },
+
+  getRole: (): string | null => {
+    if (typeof window !== "undefined") {
+      return Cookies.get(STORAGE_KEYS.ROLE) || null;
+    }
+    return null;
+  },
+
   removeRole: (): void => {
     if (typeof window !== "undefined") {
       Cookies.remove(STORAGE_KEYS.ROLE);
     }
   },
 
-  // Get token from localStorage
-  getToken: (): string | null => {
-    if (typeof window !== "undefined") {
-      return Cookies.get(STORAGE_KEYS.TOKEN) || null;
-    }
-    return null;
-  },
-
-  // Remove token from localStorage
-  removeToken: (): void => {
-    if (typeof window !== "undefined") {
-      Cookies.remove(STORAGE_KEYS.TOKEN);
-    }
-  },
-
-  // Save user to localStorage
+  // User data management (store WITHOUT token for security)
   setUser: (user: AuthResponse): void => {
     if (typeof window !== "undefined") {
-      Cookies.set(STORAGE_KEYS.USER, JSON.stringify(user));
+      // Create a copy without the token
+      const { token: _token, ...userWithoutToken } = user;
+      Cookies.set(STORAGE_KEYS.USER, JSON.stringify(userWithoutToken));
     }
   },
 
-  // Get user from localStorage
-  getUser: (): AuthResponse | null => {
+  getUser: (): Omit<AuthResponse, "token"> | null => {
     if (typeof window !== "undefined") {
       const user = Cookies.get(STORAGE_KEYS.USER);
       return user ? JSON.parse(user) : null;
@@ -51,22 +54,21 @@ export const auth = {
     return null;
   },
 
-  // Remove user from localStorage
   removeUser: (): void => {
     if (typeof window !== "undefined") {
       Cookies.remove(STORAGE_KEYS.USER);
     }
   },
 
-  // Clear all auth data
+  // Clear all auth data (client-side only - httpOnly cookies cleared by API)
   clearAuth: (): void => {
-    auth.removeToken();
     auth.removeUser();
     auth.removeRole();
   },
 
   // Check if user is authenticated
   isAuthenticated: (): boolean => {
-    return !!auth.getToken();
+    // Check if role cookie exists (indicates httpOnly token cookie also exists)
+    return !!auth.getRole();
   },
 };

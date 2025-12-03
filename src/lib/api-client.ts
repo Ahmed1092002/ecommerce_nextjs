@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { STORAGE_KEYS } from "./constants";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
+"/api";
 
 // Enhanced error class with field information
 export class ApiErrorWithField extends Error {
@@ -44,10 +44,10 @@ export async function apiClient<T>(
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
-      // credentials: "include",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
+        // ...(token && { Authorization: `Bearer ${token}` }),
         ...options?.headers,
       },
     });
