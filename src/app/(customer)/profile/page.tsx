@@ -16,8 +16,10 @@ import {
   MapPin,
 } from "lucide-react";
 import { CustomerProfile as CustomerProfileType } from "@/types/user";
+import { useRouter } from "next/navigation";
 
 export default function CustomerProfile() {
+  const router = useRouter();
   const { user, getCustomerProfile, updateCustomerProfile, loading } =
     useAuth();
   const [isEditing, setIsEditing] = useState(false);
@@ -177,8 +179,7 @@ export default function CustomerProfile() {
                 <ShoppingBag className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Total Orders</p>
-                <p className="text-2xl font-bold text-gray-900">0</p>
+                <p className="text-sm text-gray-600">Orders</p>
               </div>
             </div>
           </Card>
@@ -190,19 +191,20 @@ export default function CustomerProfile() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Wishlist Items</p>
-                <p className="text-2xl font-bold text-gray-900">0</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+          <Card
+            className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => router.push("/profile/addresses")}
+          >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-green-100 rounded-lg">
                 <MapPin className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Saved Addresses</p>
-                <p className="text-2xl font-bold text-gray-900">0</p>
+                <p className="text-sm text-gray-600">Addresses</p>
               </div>
             </div>
           </Card>

@@ -22,6 +22,7 @@ import {
   LogOut,
   Store,
   User2,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,7 +44,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
     },
     {
       label: "Products",
-      href: "/seller/products",
+      href: "/seller/product",
       icon: <Package className="h-4 w-4" />,
     },
     {
@@ -55,6 +56,11 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
       label: "Analytics",
       href: "/seller/analytics",
       icon: <BarChart3 className="h-4 w-4" />,
+    },
+    {
+      label: "Addresses",
+      href: "/seller/addresses",
+      icon: <MapPin className="h-4 w-4" />,
     },
     {
       label: "Settings",
