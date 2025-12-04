@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 export function Navbar() {
-  const { logout, User: user } = useAuth();
+  const { logout, user } = useAuth();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -83,7 +83,11 @@ export function Navbar() {
             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
 
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/profile")}
+          >
             <User className="h-5 w-5" />
             <span className="sr-only">Account</span>
           </Button>

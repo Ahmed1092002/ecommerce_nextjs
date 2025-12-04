@@ -22,3 +22,19 @@ export interface AuthResponse {
   userType: string;
   token: string;
 }
+export interface CreateSellerProfile {
+  businessName: string;
+}
+export interface CreateCustomerProfile {
+  name: string;
+}
+export interface SellerProfile {
+  businessName: string;
+  email: string;
+  userType: string;
+}
+export interface CustomerProfile {
+  name: string;
+  email: string;
+  userType: string;
+}

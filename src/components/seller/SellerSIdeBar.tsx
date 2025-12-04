@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -32,8 +32,7 @@ interface SellerSidebarProps {
 
 export function SellerSidebar({ navItems }: SellerSidebarProps) {
   const pathname = usePathname();
-  // const router = useRouter();
-  const { logout, User } = useAuth();
+  const { logout, user } = useAuth();
 
   // Default navigation items
   const defaultItems = [
@@ -86,9 +85,13 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
               <Store className="h-6 w-6" />
               <span>Seller Panel</span>
             </div>
-            {User && (
+            {user && (
               <div className="text-xs text-muted-foreground font-medium">
-                {User.username || User.email}
+                {"username" in user
+                  ? user.username
+                  : "businessName" in user
+                  ? user.businessName
+                  : user.email}
               </div>
             )}
           </div>
@@ -130,7 +133,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         {/* Footer with Actions */}
         <SidebarFooter className="px-4 py-4 border-t border-[var(--sidebar-border)] space-y-2">
           {/* Back to Store Button */}
-          <Link href="/products" className="block">
+          <Link href="/seller/profile" className="block">
             <Button variant="outline" className="w-full justify-start gap-2">
               <User2 className="h-4 w-4" />
               <span>Profile</span>
