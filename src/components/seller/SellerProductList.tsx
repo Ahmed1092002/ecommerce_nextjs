@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 type ApiItem = {
   id: number | string;
   name: string;
+  image: string;
   description?: string;
   price: number;
   quantity?: number;
@@ -233,7 +234,7 @@ export function SellerProductList() {
                 name: it.name,
                 price: it.finalPrice ?? it.price,
                 stock: typeof it.quantity === "number" ? it.quantity : 0,
-                images: [],
+                image: it.image,
               }}
             />
           ))

@@ -13,7 +13,7 @@ export function useCart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post("/cart/AddItem", addToCartData);
+      const response = await api.post("/customer/cart/AddItem", addToCartData);
       toast.success("Product added to cart!");
       return response;
     } catch (error) {
@@ -33,8 +33,8 @@ export function useCart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get<Cart>("/cart/GetCart");
-      return response;
+      const response = await api.get<Cart>("/customer/cart/GetCart");
+      return response?.cart;
     } catch (error) {
       let errorMessage = "An error occurred while fetching the cart.";
       if (error instanceof Error) {
@@ -51,7 +51,7 @@ export function useCart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.delete(`/cart/remove/${cartItemId}`);
+      const response = await api.delete(`/customer/cart/remove/${cartItemId}`);
       toast.success("Product removed from cart!");
       return response;
     } catch (error) {
@@ -71,7 +71,7 @@ export function useCart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.patch(`/cart/update/${cartItemId}`, {
+      const response = await api.put(`/customer/cart/update/${cartItemId}`, {
         quantity,
       });
       toast.success("Product quantity updated!");
@@ -92,7 +92,7 @@ export function useCart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.delete("/cart/clear");
+      const response = await api.delete("/customer/cart/clear");
       toast.success("Cart cleared!");
       return response;
     } catch (error) {

@@ -53,7 +53,7 @@ export async function apiClient<T>(
     });
 
     const data = await response.json();
-
+    console.log(response);
     if (!response.ok) {
       const error = data as ApiError;
       // Pass the error field (e.g., "password") to createApiError

@@ -40,6 +40,7 @@ type ApiItem = {
   id: number | string;
   name: string;
   description?: string;
+  image?: string;
   price: number;
   quantity?: number;
   discount?: number;
@@ -443,9 +444,7 @@ export default function Product() {
                 items.map((it) => (
                   <ProductCard
                     buttonTitle="View Details"
-                    onButtonClick={() =>
-                      router.push(`/product/${it.id}`)
-                    }
+                    onButtonClick={() => router.push(`/product/${it.id}`)}
                     link={`/product/${it.id}`}
                     key={String(it.id)}
                     showAddToCartButton={true}
@@ -457,7 +456,7 @@ export default function Product() {
                       name: it.name,
                       price: it.finalPrice ?? it.price,
                       stock: typeof it.quantity === "number" ? it.quantity : 0,
-                      images: [],
+                      image: it.image,
                     }}
                   />
                 ))

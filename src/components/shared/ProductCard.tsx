@@ -22,7 +22,7 @@ interface ProductCardProps {
     name: string;
     price: number;
     stock: number;
-    images?: string[];
+    image?: string;
     rating?: number; // Added rating for enhancement
   };
 }
@@ -43,10 +43,11 @@ export function ProductCard({
       {/* Product Image and Quick View */}
       <CardHeader className="relative h-48 p-0">
         <Link href={`${link}${product.id}`} className="block h-full">
-          {product.images?.[0] ? (
+          {product.image ? (
             <Image
-              src={product.images[0]}
+              src={product.image}
               alt={product.name}
+              unoptimized={true}
               fill // Make image fill the parent
               sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" // Optimize image loading
               className="object-cover transition-transform duration-500 group-hover:scale-105"

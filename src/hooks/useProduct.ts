@@ -54,26 +54,24 @@ export function useProduct() {
     return response;
   }
 
-    async function getCustomerProducts(params?: SearchProductsParams) {
-      let query = "";
-      if (params) {
-        const entries = Object.entries(params).filter(
-          ([, v]) => v !== undefined
-        );
-        if (entries.length > 0) {
-          const searchParams = new URLSearchParams();
-          for (const [k, v] of entries) {
-            searchParams.append(k, String(v));
-          }
-          query = `?${searchParams.toString()}`;
+  async function getCustomerProducts(params?: SearchProductsParams) {
+    let query = "";
+    if (params) {
+      const entries = Object.entries(params).filter(([, v]) => v !== undefined);
+      if (entries.length > 0) {
+        const searchParams = new URLSearchParams();
+        for (const [k, v] of entries) {
+          searchParams.append(k, String(v));
         }
+        query = `?${searchParams.toString()}`;
       }
-
-      // Use the same base path as other seller product calls and append query string
-      const endpoint = `/customer/products/GetProducts${query}`;
-      const response = await api.get<Product>(endpoint);
-      return response;
     }
+
+    // Use the same base path as other seller product calls and append query string
+    const endpoint = `/customer/products/GetProducts${query}`;
+    const response = await api.get<Product>(endpoint);
+    return response;
+  }
   async function getProductById(id: string) {
     try {
       setLoading(true);
@@ -111,6 +109,28 @@ export function useProduct() {
       setLoading(false);
     }
   }
+  async function deleteProduct(id: number) {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.delete(`/seller/products/DeleteProduct/${id}`);
+      console.log(response);
+      if (response) {
+        toast.success("Product deleted successfully!");
+        router.push("/seller/product");
+      }
+      return response;
+    } catch (error) {
+      let errorMessage = "An error occurred while deleting the product.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return {
     createProduct,
@@ -119,6 +139,7 @@ export function useProduct() {
     updateProduct,
     Loading,
     error,
-    getCustomerProducts
+    getCustomerProducts,
+    deleteProduct,
   };
 }

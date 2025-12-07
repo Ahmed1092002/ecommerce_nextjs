@@ -1,5 +1,6 @@
 export interface CartItem {
   cartItemId: number;
+  image: string;
   name: string;
   price: number;
   productId: number;
@@ -8,11 +9,13 @@ export interface CartItem {
 }
 
 export interface Cart {
-  cartItems: CartItem[];
-  totalCartPrice: number;
-  totalDiscount: number;
-  totalItems: number;
-  totalQuantity: number;
+  cart: {
+    cartItems: CartItem[];
+    totalCartPrice: number;
+    totalDiscount: number;
+    totalItems: number;
+    totalQuantity: number;
+  };
 }
 
 export interface AddToCartData {

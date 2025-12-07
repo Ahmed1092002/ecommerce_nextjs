@@ -107,13 +107,13 @@ export default function useAddress() {
   }
   async function setSellerAddressDefault(id: number) {
     return withLoadingAndError(async () => {
-      const res = await api.patch<Address>(`/seller/addresses/${id}/default`);
+      const res = await api.put(`/seller/addresses/${id}/default`);
       return res;
     }, "Address set as default successfully!");
   }
   async function setCustomerAddressDefault(id: number) {
     return withLoadingAndError(async () => {
-      const res = await api.patch(`/customer/addresses/${id}/default`);
+      const res = await api.put(`/customer/addresses/${id}/default`);
       return res;
     }, "Address set as default successfully!");
   }

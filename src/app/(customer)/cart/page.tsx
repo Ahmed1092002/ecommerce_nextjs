@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/shared/modal";
+import Image from "next/image";
 
 export default function CartPage() {
   const router = useRouter();
@@ -211,9 +212,19 @@ export default function CartPage() {
                 >
                   <div className="flex flex-col sm:flex-row gap-6">
                     {/* Product Image Placeholder */}
-                    <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 rounded-lg flex items-center justify-center">
-                      <Package className="w-12 h-12 text-primary/40" />
-                    </div>
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={128}
+                        height={128}
+                        className="w-full sm:w-32 h-32 flex-shrink-0 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 rounded-lg flex items-center justify-center"
+                      />
+                    ) : (
+                      <div className="w-full sm:w-32 h-32 flex-shrink-0 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 rounded-lg flex items-center justify-center">
+                        <Package className="w-12 h-12 text-primary/40" />
+                      </div>
+                    )}
 
                     {/* Product Details */}
                     <div className="flex-1 space-y-3">

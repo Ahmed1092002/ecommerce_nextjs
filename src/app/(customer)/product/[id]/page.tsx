@@ -30,7 +30,7 @@ type ProductDetail = {
   quantity: number;
   discount: number;
   finalPrice: number;
-  images?: string[];
+  image?: string;
   colors?: string[];
   storage?: string[];
   specifications?: {
@@ -180,11 +180,9 @@ export default function ProductDetailsPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square bg-muted rounded-2xl overflow-hidden border border-[var(--border)]">
-              {product.images && product.images.length > 0 ? (
+              {product.image && product.image.length > 0 ? (
                 <Image
-                  src={
-                    product.images[selectedImage] || mockImages[selectedImage]
-                  }
+                  src={product.image}
                   alt={product.name}
                   fill
                   className="object-cover"

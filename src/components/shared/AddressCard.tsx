@@ -24,7 +24,7 @@ export function AddressCard({
   isSettingDefault,
 }: AddressCardProps) {
   return (
-    <Card className="p-6 relative overflow-hidden group hover:shadow-md transition-shadow">
+    <Card className="p-6 relative overflow-hidden group hover:shadow-md transition-shadow border-(--primary)/10">
       {address.isDefault && (
         <div className="absolute top-0 right-0 bg-(--primary) text-white text-xs px-3 py-1 rounded-bl-lg font-medium flex items-center gap-1">
           <CheckCircle2 className="w-3 h-3" />
@@ -69,16 +69,18 @@ export function AddressCard({
           <Edit2 className="w-4 h-4 mr-2" />
           Edit
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-          onClick={() => onDelete(address.id)}
-          disabled={isDeleting}
-        >
-          <Trash2 className="w-4 h-4 mr-2" />
-          Delete
-        </Button>
+        {address.isDefault == false && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+            onClick={() => onDelete(address.id)}
+            disabled={isDeleting}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </Button>
+        )}
         {!address.isDefault && (
           <Button
             variant="ghost"
