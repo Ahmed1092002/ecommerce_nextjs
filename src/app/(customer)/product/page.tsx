@@ -35,6 +35,7 @@ import {
   LayoutGrid,
   List,
 } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
 
 type ApiItem = {
   id: number | string;
@@ -58,6 +59,7 @@ type PaginatedProducts = {
 export default function Product() {
   const router = useRouter();
   const { getCustomerProducts, Loading: loadingProducts } = useProduct();
+  const { addToCart } = useCart();
   const [items, setItems] = useState<ApiItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -448,8 +450,11 @@ export default function Product() {
                     link={`/product/${it.id}`}
                     key={String(it.id)}
                     showAddToCartButton={true}
-                    onAddToCartClick={() => {
-                      console.log("Add to cart clicked for product:", it);
+                    onAddToCartClick={async () => {
+                      await addToCart({
+                        productId: Number(it.id),
+                        quantity: 1,
+                      });
                     }}
                     product={{
                       id: String(it.id),

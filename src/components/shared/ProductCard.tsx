@@ -47,7 +47,7 @@ export function ProductCard({
             <Image
               src={product.image}
               alt={product.name}
-              unoptimized={true}
+              
               fill // Make image fill the parent
               sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" // Optimize image loading
               className="object-cover transition-transform duration-500 group-hover:scale-105"
