@@ -2,43 +2,43 @@
 
 import { useEffect, useState } from "react";
 import useAddress from "@/hooks/useAddress";
-import {
-  AddressData,
-  CreateAddressData,
-  UpdateAddressData,
-} from "@/types/address";
+import { AddressData } from "@/types/address";
 import { AddressCard } from "@/components/shared/AddressCard";
-import { AddressForm } from "@/components/shared/AddressForm";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Plus, MapPin } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function CustomerAddressesPage() {
   const {
     loading,
     getCustomerAddresses,
-    createCustomerAddress,
-    updateCustomerAddress,
     deleteCustomerAddress,
     setCustomerAddressDefault,
   } = useAddress();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [addresses, setAddresses] = useState<AddressData[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<AddressData | undefined>(
-    undefined
-  );
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchAddresses = async () => {
+  // Get page from URL or default to 1
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const fetchAddresses = async (page: number) => {
     try {
-      const response = await getCustomerAddresses(0);
+      // API expects 0-indexed page, UI is 1-indexed
+      const response = await getCustomerAddresses(page);
       if (response && response.data) {
         setAddresses(response.data);
+        setTotalPages(response.totalPages);
       }
     } catch (error) {
       console.error("Failed to fetch addresses:", error);
@@ -46,40 +46,15 @@ export default function CustomerAddressesPage() {
   };
 
   useEffect(() => {
-    fetchAddresses();
+    fetchAddresses(currentPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleCreate = async (data: CreateAddressData | UpdateAddressData) => {
-    try {
-      await createCustomerAddress(data as CreateAddressData);
-      setIsDialogOpen(false);
-      fetchAddresses();
-    } catch (error) {
-      console.error("Failed to create address:", error);
-    }
-  };
-
-  const handleUpdate = async (data: CreateAddressData | UpdateAddressData) => {
-    if (!editingAddress) return;
-    try {
-      await updateCustomerAddress(
-        Number(editingAddress.id),
-        data as UpdateAddressData
-      );
-      setEditingAddress(undefined);
-      setIsDialogOpen(false);
-      fetchAddresses();
-    } catch (error) {
-      console.error("Failed to update address:", error);
-    }
-  };
+  }, [currentPage]);
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this address?")) {
       try {
         await deleteCustomerAddress(Number(id));
-        fetchAddresses();
+        fetchAddresses(currentPage);
       } catch (error) {
         console.error("Failed to delete address:", error);
       }
@@ -89,20 +64,14 @@ export default function CustomerAddressesPage() {
   const handleSetDefault = async (id: string) => {
     try {
       await setCustomerAddressDefault(Number(id));
-      fetchAddresses();
+      fetchAddresses(currentPage);
     } catch (error) {
       console.error("Failed to set default address:", error);
     }
   };
 
-  const openCreateDialog = () => {
-    setEditingAddress(undefined);
-    setIsDialogOpen(true);
-  };
-
-  const openEditDialog = (address: AddressData) => {
-    setEditingAddress(address);
-    setIsDialogOpen(true);
+  const handlePageChange = (page: number) => {
+    router.push(`/profile/addresses?page=${page}`);
   };
 
   return (
@@ -119,7 +88,7 @@ export default function CustomerAddressesPage() {
             </p>
           </div>
           <Button
-            onClick={openCreateDialog}
+            onClick={() => router.push("/profile/addresses/create")}
             className="bg-(--primary) hover:opacity-90 text-white"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -141,7 +110,7 @@ export default function CustomerAddressesPage() {
               Add an address to speed up your checkout process
             </p>
             <Button
-              onClick={openCreateDialog}
+              onClick={() => router.push("/profile/addresses/create")}
               variant="outline"
               className="border-(--primary) text-(--primary) hover:bg-(--primary)/5"
             >
@@ -149,34 +118,77 @@ export default function CustomerAddressesPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {addresses.map((address) => (
-              <AddressCard
-                key={address.id}
-                address={address}
-                onEdit={openEditDialog}
-                onDelete={handleDelete}
-                onSetDefault={handleSetDefault}
-              />
-            ))}
-          </div>
-        )}
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {addresses.map((address) => (
+                <AddressCard
+                  key={address.id}
+                  address={address}
+                  onEdit={() => router.push(`/profile/addresses/${address.id}`)}
+                  onDelete={handleDelete}
+                  onSetDefault={handleSetDefault}
+                />
+              ))}
+            </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>
-                {editingAddress ? "Edit Address" : "Add New Address"}
-              </DialogTitle>
-            </DialogHeader>
-            <AddressForm
-              initialData={editingAddress}
-              onSubmit={editingAddress ? handleUpdate : handleCreate}
-              onCancel={() => setIsDialogOpen(false)}
-              isLoading={loading}
-            />
-          </DialogContent>
-        </Dialog>
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1)
+                            handlePageChange(currentPage - 1);
+                        }}
+                        className={
+                          currentPage <= 1
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            href="#"
+                            isActive={page === currentPage}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(page);
+                            }}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )
+                    )}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages)
+                            handlePageChange(currentPage + 1);
+                        }}
+                        className={
+                          currentPage >= totalPages
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
