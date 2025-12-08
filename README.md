@@ -61,141 +61,133 @@ The lib/ folder contains core utilities like database connections, authenticatio
 ```
 ecommerce_nextjs/
 ├── src/
-│ ├── app/
-│ │ ├── (customer)/ # Customer layout group
-│ │ │ ├── layout.tsx # Customer layout (header, footer, cart icon)
-│ │ │ ├── page.tsx # Home page
-│ │ │ ├── products/
-│ │ │ │ ├── page.tsx # Products listing
-│ │ │ │ └── [id]/
-│ │ │ │ └── page.tsx # Product details
-│ │ │ ├── cart/
-│ │ │ │ └── page.tsx
-│ │ │ ├── checkout/
-│ │ │ │ └── page.tsx
-│ │ │ ├── orders/
-│ │ │ │ └── page.tsx # Customer orders history
-│ │ │ └── profile/
-│ │ │ └── page.tsx
-│ │ │
-│ │ ├── (seller)/ # Seller layout group
-│ │ │ ├── layout.tsx # Seller dashboard layout (sidebar)
-│ │ │ └── seller/
-│ │ │ ├── dashboard/
-│ │ │ │ └── page.tsx
-│ │ │ ├── products/
-│ │ │ │ ├── page.tsx # Manage products
-│ │ │ │ ├── new/
-│ │ │ │ │ └── page.tsx # Add product
-│ │ │ │ └── [id]/
-│ │ │ │ └── edit/
-│ │ │ │ └── page.tsx # Edit product
-│ │ │ ├── orders/
-│ │ │ │ └── page.tsx # Seller orders
-│ │ │ ├── analytics/
-│ │ │ │ └── page.tsx
-│ │ │ └── profile/
-│ │ │ └── page.tsx
-│ │ │
-│ │ ├── (auth)/ # Auth layout (centered, minimal)
-│ │ │ ├── layout.tsx
-│ │ │ ├── login/
-│ │ │ │ └── page.tsx
-│ │ │ ├── register/
-│ │ │ │ └── page.tsx
-│ │ │ └── forgot-password/
-│ │ │ └── page.tsx
-│ │ │
-│ │ └── api/ # REST API Routes
-│ │ ├── auth/
-│ │ │ ├── login/
-│ │ │ │ └── route.ts
-│ │ │ ├── register/
-│ │ │ │ └── route.ts
-│ │ │ └── logout/
-│ │ │ └── route.ts
-│ │ ├── products/
-│ │ │ ├── route.ts # GET all, POST create
-│ │ │ └── [id]/
-│ │ │ └── route.ts # GET, PUT, DELETE
-│ │ ├── orders/
-│ │ │ ├── route.ts
-│ │ │ └── [id]/
-│ │ │ └── route.ts
-│ │ ├── cart/
-│ │ │ └── route.ts
-│ │ └── users/
-│ │ └── [id]/
-│ │ └── route.ts
-│ │
-│ ├── components/
-│ │ ├── customer/
-│ │ │ ├── Header.tsx
-│ │ │ ├── Footer.tsx
-│ │ │ ├── ProductCard.tsx
-│ │ │ └── CartItem.tsx
-│ │ ├── seller/
-│ │ │ ├── Sidebar.tsx
-│ │ │ ├── ProductForm.tsx
-│ │ │ └── OrderTable.tsx
-│ │ ├── shared/
-│ │ │ ├── Button.tsx
-│ │ │ ├── Input.tsx
-│ │ │ └── Modal.tsx
-│ │ └── ui/ # shadcn/ui components
-│ │
-│ ├── lib/
-│ │ ├── db.ts # Database connection
-│ │ ├── auth.ts # Auth utilities
-│ │ └── api-helpers.ts # API response helpers
-│ │
-│ ├── types/
-│ │ ├── user.ts
-│ │ ├── product.ts
-│ │ ├── order.ts
-│ │ └── cart.ts
-│ │
-│ ├── middleware.ts # Auth & role-based route protection
-│ └── utils/
-│ ├── validators.ts
-│ └── helpers.ts
+│   ├── app/
+│   │   ├── (customer)/              # Customer layout group (default)
+│   │   │   ├── layout.tsx           # Header + Footer
+│   │   │   ├── page.tsx             # Home page
+│   │   │   ├── products/
+│   │   │   │   ├── page.tsx         # Products listing
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx     # Product details
+│   │   │   ├── cart/
+│   │   │   │   └── page.tsx
+│   │   │   ├── checkout/
+│   │   │   │   └── page.tsx
+│   │   │   ├── orders/
+│   │   │   │   └── page.tsx
+│   │   │   └── profile/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── (seller)/                # Seller layout group
+│   │   │   ├── layout.tsx           # Sidebar + Header
+│   │   │   └── seller/
+│   │   │       ├── dashboard/
+│   │   │       │   └── page.tsx
+│   │   │       ├── products/
+│   │   │       │   ├── page.tsx
+│   │   │       │   ├── create/
+│   │   │       │   │   └── page.tsx
+│   │   │       │   └── [id]/
+│   │   │       │       └── edit/
+│   │   │       │           └── page.tsx
+│   │   │       ├── orders/
+│   │   │       │   └── page.tsx
+│   │   │       ├── analytics/
+│   │   │       │   └── page.tsx
+│   │   │       └── settings/
+│   │   │           └── page.tsx
+│   │   │
+│   │   ├── (auth)/                  # Auth pages
+│   │   │   ├── layout.tsx           # Minimal centered layout
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   └── register/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── api/                     # Next.js API Routes (Proxy Layer)
+│   │   │   ├── auth/
+│   │   │   │   ├── login/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── register/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── logout/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── me/
+│   │   │   │       └── route.ts
+│   │   │   ├── products/
+│   │   │   │   ├── route.ts         # GET all, POST create
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts     # GET, PUT, DELETE
+│   │   │   ├── orders/
+│   │   │   │   ├── route.ts
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts
+│   │   │   ├── cart/
+│   │   │   │   ├── route.ts
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts
+│   │   │   └── users/
+│   │   │       ├── route.ts
+│   │   │       └── [id]/
+│   │   │           └── route.ts
+│   │   │
+│   │   ├── globals.css
+│   │   └── layout.tsx               # Root layout
+│   │
+│   ├── components/
+│   │   ├── customer/
+│   │   │   └── ProductCard.tsx
+│   │   ├── seller/
+│   │   │   ├── SellerSidebar.tsx
+│   │   │   ├── ProductForm.tsx
+│   │   │   └── OrderTable.tsx
+│   │   ├── shared/
+│   │   │   ├── Header.tsx           # Customer header
+│   │   │   ├── Footer.tsx
+│   │   │   ├── NavBar.tsx
+│   │   │   ├── Button.tsx
+│   │   │   └── Input.tsx
+│   │   └── ui/                      # shadcn/ui components
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── input.tsx
+│   │       ├── sidebar.tsx
+│   │       └── ...
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts               # Authentication hook
+│   │   ├── useProducts.ts           # Products data hook
+│   │   ├── useCart.ts               # Cart management hook
+│   │   └── useOrders.ts             # Orders hook
+│   │
+│   ├── lib/
+│   │   ├── api-client.ts            # API client (fetch wrapper)
+│   │   ├── auth.ts                  # Auth utilities (token management)
+│   │   ├── constants.ts             # API endpoints, storage keys
+│   │   └── utils.ts                 # General utilities
+│   │
+│   ├── types/
+│   │   ├── api.ts                   # API response types
+│   │   ├── user.ts                  # User, Auth types
+│   │   ├── product.ts               # Product types
+│   │   ├── order.ts                 # Order types
+│   │   └── cart.ts                  # Cart types
+│   │
+│   ├── utils/
+│   │   ├── validators.ts            # Form validation
+│   │   └── helpers.ts               # Format price, dates, etc.
+│   │
+│   └── middleware.ts                # Route protection & role-based routing
 │
-├── prisma/
-│ └── schema.prisma # Database schema
+├── public/
+│   ├── images/
+│   └── icons/
 │
-└── public/
-└── images/
+├── .env.local                       # Environment variables
+├── .eslintrc.json
+├── next.config.js
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── README.md
 ```
-
-wite to me a plan to create ecommerce ith two users seller and customer
-and in the future admin
-i will use rest api
-i want to make two layouts give me a plan and good structure
-give me a plan and sturcture
-
-Phase 1: Setup
-Set up folder structure
-Configure environment variables
-Create API client utilities
-Set up TypeScript types
-
-Phase 2: Authentication
-Create auth API routes (proxy to backend)
-Build login/register pages
-Implement JWT token management
-Set up middleware for protected routes
-
-Phase 3: Customer Features
-Customer layout
-Products listing (fetch from API)
-Product details page
-Cart functionality (API calls)
-Checkout process
-
-Phase 4: Seller Features
-Seller layout with sidebar
-Product management (CRUD via API)
-Orders management
-Dashboard analytics
-
-i want to but a diffrence layout to seller and customer in front but i want to make customer layout is defult if user login by seller navigate to seller layout

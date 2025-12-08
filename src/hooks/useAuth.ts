@@ -1,22 +1,34 @@
 "use client";
-import { useEffect, useState } from "react";
-import { AuthResponse, LoginCredentials, RegisterData } from "./../types/user";
+import { useState } from "react";
+import {
+  AuthResponse,
+  CreateCustomerProfile,
+  CreateSellerProfile,
+  LoginCredentials,
+  RegisterData,
+  SellerProfile,
+  CustomerProfile,
+} from "./../types/user";
 import { api } from "@/lib/api-client";
-import { ApiResponse } from "@/types/api";
 import { auth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { ApiErrorWithField } from "@/lib/api-client";
+import { toast } from "react-toastify";
+import { useAsyncOperation } from "./useAsyncOperation";
+
+// Better type for user state - only profile response types
+type UserState = SellerProfile | CustomerProfile | AuthResponse | null;
 
 export function useAuth() {
-  const [User, setUser] = useState<AuthResponse | null>(null);
-  const [Loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserState>(() => {
+    const savedUser = auth.getUser();
+    const token = auth.getToken();
+    return savedUser && token ? savedUser : null;
+  });
   const router = useRouter();
+  const { loading, error, withLoadingAndError } = useAsyncOperation();
 
   async function login(loginData: LoginCredentials) {
-    try {
-      setLoading(true);
-      setError(null);
+    return withLoadingAndError(async () => {
       const res = await api.post<AuthResponse>("/auth/login", loginData);
       auth.setToken(res.token);
       auth.setUser(res);
@@ -28,24 +40,13 @@ export function useAuth() {
         router.push("/");
       }
       return res;
-    } catch (error) {
-      // Extract error message from ApiErrorWithField
-      let errorMessage = "An error occurred";
-      if (error instanceof ApiErrorWithField) {
-        errorMessage = error.message; // This will be the message from API
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      throw error; // Re-throw so form can handle it if needed
-    } finally {
-      setLoading(false);
-    }
+    }, "Login successful!");
   }
 
   async function logout() {
     auth.clearAuth();
     setUser(null);
+    toast.info("Logged out successfully");
     router.push("/");
   }
 
@@ -56,49 +57,97 @@ export function useAuth() {
     if (savedUser && token) {
       setUser(savedUser);
     }
-    setLoading(false);
+  }
+
+  async function createSellerProfile(profileData: CreateSellerProfile) {
+    return withLoadingAndError(async () => {
+      const res = await api.post<AuthResponse>("/seller/profile", profileData);
+      auth.setUser(res);
+      setUser(res);
+      router.push("/seller/dashboard");
+      return res;
+    }, "Seller profile created successfully!");
+  }
+
+  async function createCustomerProfile(profileData: CreateCustomerProfile) {
+    return withLoadingAndError(async () => {
+      const res = await api.post<AuthResponse>(
+        "/customer/profile",
+        profileData
+      );
+      auth.setUser(res);
+      setUser(res);
+      router.push("/");
+      return res;
+    }, "Customer profile created successfully!");
+  }
+
+  async function getSellerProfile() {
+    return withLoadingAndError(async () => {
+      const res = await api.get<SellerProfile>("/seller/profile");
+      setUser(res);
+      return res;
+    }, "Profile loaded successfully!");
+  }
+
+  async function getCustomerProfile() {
+    return withLoadingAndError(async () => {
+      const res = await api.get<CustomerProfile>("/customer/profile");
+      setUser(res);
+      return res;
+    }, "Profile loaded successfully!");
+  }
+
+  async function updateSellerProfile(profileData: CreateSellerProfile) {
+    return withLoadingAndError(async () => {
+      const res = await api.put<SellerProfile>("/seller/profile", profileData);
+      setUser(res);
+      return res;
+    }, "Profile updated successfully!");
+  }
+
+  async function updateCustomerProfile(profileData: CreateCustomerProfile) {
+    return withLoadingAndError(async () => {
+      const res = await api.put<CustomerProfile>(
+        "/customer/profile",
+        profileData
+      );
+      setUser(res);
+      return res;
+    }, "Profile updated successfully!");
   }
 
   async function register(registerData: RegisterData) {
-    try {
-      setLoading(true);
-      setError(null);
+    return withLoadingAndError(async () => {
       const res = await api.post<AuthResponse>("/auth/register", registerData);
       auth.setToken(res.token);
       auth.setUser(res);
       auth.setRole(res.userType);
       setUser(res);
       if (res.userType === "SELLER") {
-        router.push("/seller/dashboard");
+        router.push("/createProfile/sellerPage");
       } else {
-        router.push("/");
+        router.push("/createProfile/customerProfile");
       }
-    } catch (error) {
-      // Extract error message from ApiErrorWithField
-      let errorMessage = "An error occurred";
-      if (error instanceof ApiErrorWithField) {
-        errorMessage = error.message; // This will be the message from API
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      throw error; // Re-throw so form can handle it if needed
-    } finally {
-      setLoading(false);
-    }
+      return res;
+    }, "Registration successful!");
   }
 
-  useEffect(() => {
-    loadUser();
-  }, []);
+
 
   return {
-    User,
-    Loading,
+    user,
+    loading,
     error,
     login,
     logout,
     loadUser,
     register,
+    getSellerProfile,
+    getCustomerProfile,
+    updateSellerProfile,
+    updateCustomerProfile,
+    createSellerProfile,
+    createCustomerProfile,
   };
 }

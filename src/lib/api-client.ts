@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import { STORAGE_KEYS } from "./constants";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
 // Enhanced error class with field information
 export class ApiErrorWithField extends Error {
@@ -36,7 +36,7 @@ export function createApiError(
 
 export async function apiClient<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit & { params?: Record<string, string | number | boolean> }
 ): Promise<T> {
   const token =
     typeof window !== "undefined" ? Cookies.get(STORAGE_KEYS.TOKEN) : null;
@@ -44,6 +44,7 @@ export async function apiClient<T>(
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
+      // credentials: "include",
       headers: {
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
@@ -52,7 +53,7 @@ export async function apiClient<T>(
     });
 
     const data = await response.json();
-
+    console.log(response);
     if (!response.ok) {
       const error = data as ApiError;
       // Pass the error field (e.g., "password") to createApiError
@@ -80,7 +81,10 @@ export async function apiClient<T>(
 
 // Convenience methods
 export const api = {
-  get: <T>(endpoint: string) => apiClient<T>(endpoint),
+  get: <T>(endpoint: string) =>
+    apiClient<T>(endpoint, {
+      method: "GET",
+    }),
 
   post: <T>(endpoint: string, body: unknown) =>
     apiClient<T>(endpoint, {
@@ -94,10 +98,10 @@ export const api = {
       body: JSON.stringify(body),
     }),
 
-  patch: <T>(endpoint: string, body: unknown) =>
+  patch: <T>(endpoint: string, body?: unknown) =>
     apiClient<T>(endpoint, {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     }),
 
   delete: <T>(endpoint: string) =>

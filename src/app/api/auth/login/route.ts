@@ -5,6 +5,7 @@ const BACKEND_URL = process.env.BACKEND_API_URL || "http://localhost:8080/api";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log("Login request body:", body);
 
     const response = await fetch(`${BACKEND_URL}/auth/login`, {
       method: "POST",

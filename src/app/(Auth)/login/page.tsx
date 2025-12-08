@@ -5,7 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LoginCredentials } from "@/types/user";
 import { Input } from "@/components/shared/Input";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const loginSchema = z.object({
   login: z.string().min(1, "Login is required"),
@@ -27,46 +29,62 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginFunction(data as LoginCredentials);
-    } catch (error) {
+    } catch {
       // Error is already handled by useAuth hook and set in error state
-      // No need to do anything here, the error will be displayed automatically
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Show API error from useAuth hook */}
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-50 border border-red-200 rounded">
+        <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
           {error}
         </div>
       )}
 
       <Input
         label="Login"
-        placeholder="Enter your login"
+        placeholder="name@example.com"
+        variant="default"
         id="login"
         error={errors.login?.message}
         {...register("login")}
       />
 
-      <Input
-        label="Password"
-        type="password"
-        placeholder="Enter your password"
-        id="password"
-        error={errors.password?.message}
-        {...register("password")}
-      />
+      <div className="space-y-2">
+        <Input
+          label="Password"
+          type="password"
+          variant="default"
+          placeholder="Enter your password"
+          id="password"
+          error={errors.password?.message}
+          {...register("password")}
+        />
+        <div className="text-right">
+          <Link
+            href="/forgot-password"
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
+      </div>
 
-      <Button
-        type="submit"
-        isLoading={isSubmitting}
-        loadingText="Logging in..."
-        className="w-full"
-      >
-        Login
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Sign In
       </Button>
+
+      <div className="text-center text-sm">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/register"
+          className="font-medium text-primary hover:underline"
+        >
+          Sign up
+        </Link>
+      </div>
     </form>
   );
 }

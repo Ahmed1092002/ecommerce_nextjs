@@ -20,7 +20,7 @@ export function Button({
   return (
     <ShadcnButton
       disabled={disabled || isLoading}
-      className={cn(className)}
+      className={cn(`transition-all duration-300`, className)}
       {...props}
     >
       {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
