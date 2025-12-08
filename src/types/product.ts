@@ -3,18 +3,17 @@ export interface Product {
   pageSize: number;
   totalPages: number;
   totalElements: number;
-  data: [
-    {
-      id: number;
-      image: string;
-      name: string;
-      description: string;
-      price: number;
-      quantity: number;
-      discount: number;
-      finalPrice: number;
-    }
-  ];
+  data: ProductData[];
+}
+export interface ProductData {
+  id: number;
+  image: string;
+  name: string;
+  description: string;
+  price: number;
+  quantity: number;
+  discount: number;
+  finalPrice: number;
 }
 interface PaginatedProducts {
   pageNumber: number;
