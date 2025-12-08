@@ -101,16 +101,7 @@ export default function ProductDetailsPage() {
     }
   };
 
-  // Mock data for demonstration (replace with actual product data)
-  const mockImages = [
-    "/placeholder-product-1.jpg",
-    "/placeholder-product-2.jpg",
-    "/placeholder-product-3.jpg",
-    "/placeholder-product-4.jpg",
-  ];
 
-  const mockColors = ["#000000", "#9333EA", "#DC2626", "#EAB308", "#E5E7EB"];
-  const mockStorage = ["128GB", "256GB", "512GB", "1TB"];
 
   if (loadingProduct) {
     return (
