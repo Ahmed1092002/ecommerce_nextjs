@@ -3,7 +3,8 @@ import { useProduct } from "@/hooks/useProduct";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { ProductCard } from "@/components/shared/ProductCard";
+import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
+import { useWishlist } from "@/hooks/useWishlist";
 import {
   Pagination,
   PaginationContent,
@@ -60,6 +61,7 @@ export default function Product() {
   const router = useRouter();
   const { getCustomerProducts, loading: loadingProducts } = useProduct();
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const [items, setItems] = useState<ApiItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -73,6 +75,9 @@ export default function Product() {
   const [maxPrice, setMaxPrice] = useState<number | "">("");
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [wishlistMap, setWishlistMap] = useState<Map<number, boolean>>(
+    new Map()
+  );
 
   async function load(p = page) {
     setLoading(true);
@@ -98,6 +103,25 @@ export default function Product() {
       console.error("Failed to load seller products", err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleWishlistToggle(productId: number, productName: string) {
+    const isInWishlist = wishlistMap.get(productId) || false;
+
+    try {
+      if (isInWishlist) {
+        await removeFromWishlist(productId);
+        setWishlistMap(new Map(wishlistMap.set(productId, false)));
+        toast.success(`${productName} removed from wishlist`);
+      } else {
+        await addToWishlist(productId);
+        setWishlistMap(new Map(wishlistMap.set(productId, true)));
+        toast.success(`${productName} added to wishlist`);
+      }
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+      toast.error("Failed to update wishlist");
     }
   }
 
@@ -444,25 +468,30 @@ export default function Product() {
                 </div>
               ) : (
                 items.map((it) => (
-                  <ProductCard
-                    buttonTitle="View Details"
-                    onButtonClick={() => router.push(`/product/${it.id}`)}
-                    link={`/product/${it.id}`}
+                  <CustomerProductCard
                     key={String(it.id)}
-                    showAddToCartButton={true}
-                    onAddToCartClick={async () => {
+                    product={{
+                      id: String(it.id),
+                      name: it.name,
+                      price: it.price,
+                      finalPrice: it.finalPrice,
+                      discount: it.discount,
+                      stock: typeof it.quantity === "number" ? it.quantity : 0,
+                      image: it.image,
+                      rating: 4.5, // You can add actual rating from API
+                    }}
+                    isInWishlist={wishlistMap.get(Number(it.id)) || false}
+                    onWishlistToggle={() =>
+                      handleWishlistToggle(Number(it.id), it.name)
+                    }
+                    onAddToCart={async () => {
                       await addToCart({
                         productId: Number(it.id),
                         quantity: 1,
                       });
+                      toast.success(`${it.name} added to cart!`);
                     }}
-                    product={{
-                      id: String(it.id),
-                      name: it.name,
-                      price: it.finalPrice ?? it.price,
-                      stock: typeof it.quantity === "number" ? it.quantity : 0,
-                      image: it.image,
-                    }}
+                    link="/product/"
                   />
                 ))
               )}

@@ -9,13 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/utils/helpers";
-import { ShoppingCart, StarIcon } from "lucide-react"; // Assuming you have lucide-react for icons
+import { ShoppingCart, StarIcon, Heart } from "lucide-react"; // Assuming you have lucide-react for icons
 
 interface ProductCardProps {
   buttonTitle?: string;
   onButtonClick?: () => void;
   onAddToCartClick?: () => void;
+  onWishlistClick?: () => void;
   showAddToCartButton?: boolean;
+  showWishlistButton?: boolean;
+  isInWishlist?: boolean;
   link?: string;
   product: {
     id: string;
@@ -32,7 +35,10 @@ export function ProductCard({
   buttonTitle,
   onButtonClick,
   onAddToCartClick,
+  onWishlistClick,
   showAddToCartButton = true,
+  showWishlistButton = true,
+  isInWishlist = false,
   link = "/products/",
 }: ProductCardProps) {
   // Determine if product is out of stock for conditional styling/text
@@ -47,7 +53,6 @@ export function ProductCard({
             <Image
               src={product.image}
               alt={product.name}
-              
               fill // Make image fill the parent
               sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw" // Optimize image loading
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -70,6 +75,28 @@ export function ProductCard({
             Quick View
           </Button>
         </div>
+
+        {/* Wishlist Button */}
+        {showWishlistButton && onWishlistClick && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`absolute left-2 top-2 h-9 w-9 rounded-full shadow-md transition-all ${
+              isInWishlist
+                ? "bg-red-500 text-white hover:bg-red-600"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onWishlistClick();
+            }}
+          >
+            <Heart
+              className={`h-5 w-5 ${isInWishlist ? "fill-current" : ""}`}
+            />
+          </Button>
+        )}
 
         <div>
           {product.stock < 5 && product.stock > 0 && (

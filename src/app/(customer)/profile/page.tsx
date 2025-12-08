@@ -187,7 +187,10 @@ export default function CustomerProfile() {
             </div>
           </Card>
 
-          <Card className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+          <Card
+            className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => router.push("/profile/wishlist")}
+          >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-pink-100 rounded-lg">
                 <Heart className="w-6 h-6 text-pink-600" />

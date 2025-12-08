@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { formatPrice } from "@/utils/helpers";
 import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 
 type ProductDetail = {
   id: number;
@@ -48,10 +49,9 @@ export default function ProductDetailsPage() {
   const router = useRouter();
   const { getProductById, loading: loadingProduct } = useProduct();
   const { addToCart, loading: loadingCart } = useCart();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const [product, setProduct] = useState<ProductDetail | null>(null);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedStorage, setSelectedStorage] = useState(0);
+
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -65,7 +65,7 @@ export default function ProductDetailsPage() {
       }
     }
     load();
-  }, []);
+  }, [id]);
 
   async function addProductToCart() {
     if (!product) return;
@@ -78,9 +78,15 @@ export default function ProductDetailsPage() {
     toast.success(`Added ${quantity} ${product.name} to cart!`);
   }
 
-  function toggleWishlist() {
-    setIsWishlisted(!isWishlisted);
-    toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
+  async function toggleWishlist() {
+    if (!product) return;
+
+    try {
+      await addToWishlist(product.id);
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+      toast.error("Failed to update wishlist");
+    }
   }
 
   const incrementQuantity = () => {

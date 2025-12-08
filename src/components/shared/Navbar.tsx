@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { Search, ShoppingCart, User, Menu, LogOut } from "lucide-react";
+import { ShoppingCart, User, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -62,15 +61,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex relative w-full max-w-sm items-center">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              variant={"search"}
-              placeholder="Search products..."
-              className="w-64 pl-9 rounded-full bg-secondary/50 border-none focus-visible:ring-1"
-            />
-          </div>
+          
 
           <Button
             variant="ghost"

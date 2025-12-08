@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Heart } from "lucide-react";
 
 export function Header() {
   return (
@@ -23,12 +24,21 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-3">
-          <Link href="/products">
+          <Link href="/product">
             <Button
               variant="ghost"
               className="text-white hover:bg-blue-700 hover:text-orange-200"
             >
               Products
+            </Button>
+          </Link>
+          <Link href="/wishlist">
+            <Button
+              variant="ghost"
+              className="text-white hover:bg-blue-700 hover:text-orange-200 flex items-center gap-2"
+            >
+              <Heart className="h-4 w-4" />
+              Wishlist
             </Button>
           </Link>
           <Link href="/cart">
