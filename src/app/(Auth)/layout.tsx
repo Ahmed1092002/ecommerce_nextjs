@@ -3,7 +3,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Store } from "lucide-react";
-
+import logo from "../../../public/images/logo-white.png";
+import Image from "next/image";
 export default function AuthLayout({
   children,
 }: {
@@ -18,8 +19,14 @@ export default function AuthLayout({
       {/* Left Side - Branding */}
       <div className="hidden lg:flex flex-col justify-between bg-[var(--primary)] p-10 text-white">
         <div className="flex items-center gap-2 text-lg font-bold">
-          <Store className="h-6 w-6" />
-          <span>Acme Store</span>
+          <Image
+            src={logo}
+            alt="Aura Shop Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <span>Aura Shop</span>
         </div>
         <div className="space-y-6 max-w-lg">
           <h1 className="text-4xl font-bold tracking-tight">
@@ -28,7 +35,7 @@ export default function AuthLayout({
           </h1>
         </div>
         <div className="text-sm text-white/80">
-          © 2024 Acme Inc. All rights reserved.
+          © {new Date().getFullYear()} Aura Shop. All rights reserved.
         </div>
       </div>
 

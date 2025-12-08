@@ -2,7 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import logo from "../../../../public/images/logo-transparent.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -18,9 +20,16 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           href="/"
-          className="text-2xl font-bold text-white hover:text-orange-200 transition-colors"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          🛒 Store
+          <Image
+            src={logo}
+            alt="Aura Shop Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <span className="text-2xl font-bold text-white">Aura Shop</span>
         </Link>
 
         <nav className="flex items-center gap-3">

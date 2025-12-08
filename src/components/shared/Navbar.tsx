@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "../../../public/images/logo.png";
+import Image from "next/image";
+
 export function Navbar() {
   const { logout, user } = useAuth();
   const router = useRouter();
@@ -30,9 +33,19 @@ export function Navbar() {
     >
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src={logo}
+              alt="Aura Shop Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+            />
             <span className="text-xl font-bold tracking-tight text-(--primary)">
-              E-STORE
+              Aura Shop
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -61,8 +74,6 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          
-
           <Button
             variant="ghost"
             size="icon"
