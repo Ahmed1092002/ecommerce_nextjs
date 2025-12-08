@@ -2,41 +2,9 @@ import { useState } from "react";
 import { api, ApiErrorWithField } from "@/lib/api-client";
 import { toast } from "react-toastify";
 import { Address, CreateAddressData, UpdateAddressData } from "@/types/address";
-
+import { useAsyncOperation } from "./useAsyncOperation";
 export default function useAddress() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  // Helper function to extract and handle errors
-  function handleError(error: unknown): string {
-    let errorMessage = "An error occurred";
-    if (error instanceof ApiErrorWithField) {
-      errorMessage = error.message;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    setError(errorMessage);
-    toast.error(errorMessage);
-    return errorMessage;
-  }
-  async function withLoadingAndError<T>(
-    operation: () => Promise<T>,
-    successMessage?: string
-  ): Promise<T> {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await operation();
-      if (successMessage) {
-        toast.success(successMessage);
-      }
-      return result;
-    } catch (error) {
-      handleError(error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { loading, error, withLoadingAndError } = useAsyncOperation();
 
   async function getSellerAddresses(page: number) {
     return withLoadingAndError(async () => {
@@ -107,13 +75,13 @@ export default function useAddress() {
   }
   async function setSellerAddressDefault(id: number) {
     return withLoadingAndError(async () => {
-      const res = await api.put(`/seller/addresses/${id}/default`);
+      const res = await api.put(`/seller/addresses/${id}/default`, {});
       return res;
     }, "Address set as default successfully!");
   }
   async function setCustomerAddressDefault(id: number) {
     return withLoadingAndError(async () => {
-      const res = await api.put(`/customer/addresses/${id}/default`);
+      const res = await api.put(`/customer/addresses/${id}/default`, {});
       return res;
     }, "Address set as default successfully!");
   }

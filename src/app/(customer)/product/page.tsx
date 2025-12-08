@@ -58,7 +58,7 @@ type PaginatedProducts = {
 
 export default function Product() {
   const router = useRouter();
-  const { getCustomerProducts, Loading: loadingProducts } = useProduct();
+  const { getCustomerProducts, loading: loadingProducts } = useProduct();
   const { addToCart } = useCart();
   const [items, setItems] = useState<ApiItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

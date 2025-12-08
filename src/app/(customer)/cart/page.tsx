@@ -1,7 +1,7 @@
 "use client";
 import { Loading } from "@/components/shared/Loading";
 import { useCart } from "@/hooks/useCart";
-import { Cart } from "@/types/cart";
+import { Cart ,CartData } from "@/types/cart";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ import Image from "next/image";
 export default function CartPage() {
   const router = useRouter();
   const { getCart, removeFromCart, updateCartQuantity, clearCart } = useCart();
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<CartData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingItems, setUpdatingItems] = useState<Set<number>>(new Set());
@@ -371,9 +371,7 @@ export default function CartPage() {
                 <Button
                   className="w-full text-base font-semibold h-12 gap-2"
                   size="lg"
-                  onClick={() => {
-                    toast.info("Checkout functionality coming soon!");
-                  }}
+                  onClick={() => router.push("/checkout")}
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-5 h-5" />

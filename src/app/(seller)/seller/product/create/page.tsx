@@ -9,7 +9,7 @@ import { Button } from "@/components/shared/Button";
 import ProductForm from "@/components/seller/ProductForm";
 
 export default function SellerProductCreatePage() {
-  const { createProduct, Loading, error } = useProduct();
+  const { createProduct, loading, error } = useProduct();
 
   const handleCreate = async (data: CreateProductData | any) => {
     await createProduct(data as CreateProductData);
@@ -40,7 +40,7 @@ export default function SellerProductCreatePage() {
         </div>
       </div>
 
-      <ProductForm onSubmit={handleCreate} isLoading={Loading} />
+      <ProductForm onSubmit={handleCreate} isLoading={loading} />
 
       {error && (
         <div className="mt-4 rounded-md bg-destructive/15 p-3 text-destructive text-sm text-center">

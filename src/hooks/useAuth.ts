@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AuthResponse,
   CreateCustomerProfile,
@@ -12,51 +12,20 @@ import {
 import { api } from "@/lib/api-client";
 import { auth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { ApiErrorWithField } from "@/lib/api-client";
 import { toast } from "react-toastify";
+import { useAsyncOperation } from "./useAsyncOperation";
 
 // Better type for user state - only profile response types
 type UserState = SellerProfile | CustomerProfile | AuthResponse | null;
 
 export function useAuth() {
-  const [user, setUser] = useState<UserState>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserState>(() => {
+    const savedUser = auth.getUser();
+    const token = auth.getToken();
+    return savedUser && token ? savedUser : null;
+  });
   const router = useRouter();
-
-  // Helper function to extract and handle errors
-  function handleError(error: unknown): string {
-    let errorMessage = "An error occurred";
-    if (error instanceof ApiErrorWithField) {
-      errorMessage = error.message;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    setError(errorMessage);
-    toast.error(errorMessage);
-    return errorMessage;
-  }
-
-  // Wrapper function for async operations with loading and error handling
-  async function withLoadingAndError<T>(
-    operation: () => Promise<T>,
-    successMessage?: string
-  ): Promise<T> {
-    try {
-      setLoading(true);
-      setError(null);
-      const result = await operation();
-      if (successMessage) {
-        toast.success(successMessage);
-      }
-      return result;
-    } catch (error) {
-      handleError(error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { loading, error, withLoadingAndError } = useAsyncOperation();
 
   async function login(loginData: LoginCredentials) {
     return withLoadingAndError(async () => {
@@ -88,7 +57,6 @@ export function useAuth() {
     if (savedUser && token) {
       setUser(savedUser);
     }
-    setLoading(false);
   }
 
   async function createSellerProfile(profileData: CreateSellerProfile) {
@@ -165,9 +133,7 @@ export function useAuth() {
     }, "Registration successful!");
   }
 
-  useEffect(() => {
-    loadUser();
-  }, []);
+
 
   return {
     user,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { Input } from "@/components/shared/Input";
 import { Button } from "@/components/shared/Button";
@@ -12,7 +12,7 @@ import {
   Package,
   Save,
 } from "lucide-react";
-import useUplodeImage from "@/hooks/useUplodeImage";
+import useUploadImage from "@/hooks/useUploadImage";
 import Image from "next/image";
 import { CreateProductData, UpdateProductData } from "@/types/product";
 
@@ -56,24 +56,21 @@ export default function ProductForm({
   isLoading,
   isEditMode = false,
 }: ProductFormProps) {
-  const [productData, setProductData] = useState<ValidationType>(
-    initialProductDataState
-  );
-  const [errors, setErrors] = useState<ErrorsType>({});
-  const { getImageFile, imageUrl, displayUrl, uploadImage } = useUplodeImage();
-
-  // Populate form if initialData is provided
-  useEffect(() => {
+  // Initialize state directly from initialData prop to avoid useEffect
+  const [productData, setProductData] = useState<ValidationType>(() => {
     if (initialData) {
-      setProductData({
+      return {
         name: initialData.name || "",
         description: initialData.description || "",
         price: initialData.price || 0,
         discount: initialData.discount || 0,
         quantity: initialData.quantity || 0,
-      });
+      };
     }
-  }, [initialData]);
+    return initialProductDataState;
+  });
+  const [errors, setErrors] = useState<ErrorsType>({});
+  const { getImageFile, imageFile, displayUrl, uploadImage } = useUploadImage();
 
   // Handle Input Changes
   const handleChange = (
@@ -274,7 +271,7 @@ export default function ProductForm({
               placeholder="0.00"
               id="price"
               value={
-                productData.price === 0 && productData.price !== ""
+                productData.price === 0 && productData.price 
                   ? ""
                   : String(productData.price)
               }
@@ -287,7 +284,7 @@ export default function ProductForm({
               placeholder="0"
               id="discount"
               value={
-                productData.discount === 0 && productData.discount !== ""
+                productData.discount === 0 && productData.discount 
                   ? ""
                   : String(productData.discount)
               }
@@ -303,7 +300,7 @@ export default function ProductForm({
               placeholder="Available stock"
               id="quantity"
               value={
-                productData.quantity === 0 && productData.quantity !== ""
+                productData.quantity === 0 && productData.quantity 
                   ? ""
                   : String(productData.quantity)
               }

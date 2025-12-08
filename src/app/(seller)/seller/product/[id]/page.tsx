@@ -12,7 +12,7 @@ import Modal from "@/components/shared/modal";
 
 export default function ProductSellerDetails() {
   const { id } = useParams();
-  const { getProductById, Loading, error, updateProduct, deleteProduct } =
+  const { getProductById, loading, error, updateProduct, deleteProduct } =
     useProduct();
 
   const [productData, setProductData] = useState<UpdateProductData | null>(
@@ -45,7 +45,7 @@ export default function ProductSellerDetails() {
     return () => {
       mounted = false;
     };
-  }, [id]);
+  }, []);
 
   const handleUpdate = async (data: UpdateProductData | any) => {
     await updateProduct(data);
@@ -53,13 +53,12 @@ export default function ProductSellerDetails() {
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    await deleteProduct(id);
-    // Modal will close automatically on unmount/navigation, or we can close it here if navigation fails
+    await deleteProduct(Number(id));
     setIsDeleting(false);
     setIsDeleteModalOpen(false);
   };
 
-  if (Loading && !productData) {
+  if (loading && !productData) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -67,7 +66,7 @@ export default function ProductSellerDetails() {
     );
   }
 
-  if (!productData && !Loading) {
+  if (!productData && !loading) {
     return (
       <div className="p-8 text-center text-muted-foreground">
         Product not found or failed to load.
@@ -109,7 +108,7 @@ export default function ProductSellerDetails() {
       <ProductForm
         initialData={productData}
         onSubmit={handleUpdate}
-        isLoading={Loading}
+        isLoading={loading}
         isEditMode={true}
       />
 

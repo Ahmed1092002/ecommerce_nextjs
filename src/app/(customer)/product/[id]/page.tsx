@@ -46,8 +46,8 @@ type ProductDetail = {
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { getProductById, Loading: loadingProduct } = useProduct();
-  const { addToCart, Loading: loadingCart } = useCart();
+  const { getProductById, loading: loadingProduct } = useProduct();
+  const { addToCart, loading: loadingCart } = useCart();
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);

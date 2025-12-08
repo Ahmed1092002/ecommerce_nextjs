@@ -173,7 +173,10 @@ export default function CustomerProfile() {
 
         {/* Quick Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+          <Card
+            className="p-6 border-none shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => router.push("/profile/orders")}
+          >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-100 rounded-lg">
                 <ShoppingBag className="w-6 h-6 text-blue-600" />

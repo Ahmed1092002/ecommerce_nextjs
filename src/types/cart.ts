@@ -7,15 +7,16 @@ export interface CartItem {
   quantity: number;
   totalPrice: number;
 }
+export interface CartData {
+  cartItems: CartItem[];
+  totalCartPrice: number;
+  totalDiscount: number;
+  totalItems: number;
+  totalQuantity: number;
+}
 
 export interface Cart {
-  cart: {
-    cartItems: CartItem[];
-    totalCartPrice: number;
-    totalDiscount: number;
-    totalItems: number;
-    totalQuantity: number;
-  };
+  cart: CartData;
 }
 
 export interface AddToCartData {
