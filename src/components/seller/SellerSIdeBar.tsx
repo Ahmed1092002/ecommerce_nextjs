@@ -54,7 +54,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
     },
     {
       label: "Analytics",
-      href: "/seller/analytics",
+      href: "/seller/analysis",
       icon: <BarChart3 className="h-4 w-4" />,
     },
     {
@@ -62,11 +62,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
       href: "/seller/addresses",
       icon: <MapPin className="h-4 w-4" />,
     },
-    {
-      label: "Settings",
-      href: "/seller/settings",
-      icon: <Settings className="h-4 w-4" />,
-    },
+
   ];
 
   // Use provided navItems or default items
