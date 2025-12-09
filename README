@@ -1,0 +1,409 @@
+# E-Commerce Platform - Next.js 13+
+
+A modern, full-stack e-commerce application built with **Next.js 13+**, **React**, **TypeScript**, and **Tailwind CSS**. This application features separate experiences for customers and sellers with role-based access control, product management, shopping cart, checkout, and order tracking.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn package manager
+
+### Installation & Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+The app will automatically reload as you make changes to files.
+
+### Build & Production
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## 📁 Project Architecture
+
+This project uses **Next.js App Router** with **Route Groups** to create distinct, role-based experiences without URL prefixes.
+
+### Route Groups Overview
+
+#### 👥 **(customer)** - Public Shopping Experience
+- Default route group for end consumers
+- Features: Product browsing, shopping cart, checkout, order history, user profile
+- Layout includes Header and Footer
+- **Key Routes:**
+  - `/` - Home page with featured products
+  - `/products` - Product listing and filtering
+  - `/products/[id]` - Product detail page
+  - `/cart` - Shopping cart
+  - `/checkout` - Checkout process
+  - `/orders` - Order history
+  - `/profile` - Customer profile management
+  - `/about` - About page
+  - `/contact` - Contact page
+
+#### 🏪 **(seller)** - Seller Dashboard
+- Dedicated interface for merchants and vendors
+- Features: Product management, order tracking, analytics, dashboard
+- Layout includes Sidebar navigation
+- **Key Routes:**
+  - `/seller` - Dashboard overview
+  - `/seller/products` - Product listing
+  - `/seller/products/create` - Create new product
+  - `/seller/products/[id]/edit` - Edit existing product
+  - `/seller/orders` - Order management
+  - `/seller/analytics` - Sales analytics and reports
+  - `/seller/profile` - Seller profile and settings
+
+#### 🔐 **(auth)** - Authentication Pages
+- Authentication flows for login and registration
+- Minimal centered layout
+- **Key Routes:**
+  - `/login` - Login form
+  - `/register` - Registration form
+  - `/createProfile/customerProfile` - Customer profile creation
+
+### 🔌 API Routes (`/api`)
+
+RESTful API endpoints for backend operations:
+
+- **`/api/auth`** - Authentication
+  - `POST /auth/login` - User login
+  - `POST /auth/register` - User registration
+  - `POST /auth/logout` - User logout
+  - `GET /auth/me` - Current user info
+  
+- **`/api/products`** - Product management
+  - `GET /products` - Fetch all products
+  - `POST /products` - Create new product
+  - `GET /products/[id]` - Get product details
+  - `PUT /products/[id]` - Update product
+  - `DELETE /products/[id]` - Delete product
+
+- **`/api/orders`** - Order management
+  - `GET /orders` - Fetch user orders
+  - `POST /orders` - Create new order
+  - `GET /orders/[id]` - Get order details
+  - `PUT /orders/[id]` - Update order status
+
+- **`/api/cart`** - Shopping cart
+  - `GET /cart` - Get cart items
+  - `POST /cart` - Add item to cart
+  - `PUT /cart/[id]` - Update cart item
+  - `DELETE /cart/[id]` - Remove cart item
+
+## 📂 Directory Structure
+
+```
+ecommerce_nextjs/
+├── src/
+│   ├── app/                          # App Router pages and layouts
+│   │   ├── (customer)/               # Customer layout group
+│   │   │   ├── layout.tsx            # Customer layout (Header + Footer)
+│   │   │   ├── page.tsx              # Home page
+│   │   │   ├── loading.tsx           # Loading state
+│   │   │   ├── products/             # Product pages
+│   │   │   │   ├── page.tsx          # Product listing
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx      # Product details
+│   │   │   ├── cart/
+│   │   │   │   └── page.tsx          # Shopping cart
+│   │   │   ├── checkout/
+│   │   │   │   └── page.tsx          # Checkout page
+│   │   │   ├── about/
+│   │   │   │   └── page.tsx          # About page
+│   │   │   ├── contact/
+│   │   │   │   └── page.tsx          # Contact page
+│   │   │   ├── profile/              # User profile
+│   │   │   │   └── page.tsx
+│   │   │   └── orders/
+│   │   │       └── page.tsx          # Order history
+│   │   │
+│   │   ├── (seller)/                 # Seller layout group
+│   │   │   ├── layout.tsx            # Seller layout (Sidebar + Header)
+│   │   │   ├── loading.tsx           # Loading state
+│   │   │   └── seller/               # Seller pages
+│   │   │       ├── page.tsx          # Dashboard
+│   │   │       ├── products/
+│   │   │       │   ├── page.tsx      # Product list
+│   │   │       │   ├── create/
+│   │   │       │   │   └── page.tsx  # Create product
+│   │   │       │   └── [id]/
+│   │   │       │       └── edit/
+│   │   │       │           └── page.tsx  # Edit product
+│   │   │       ├── orders/
+│   │   │       │   └── page.tsx      # Order management
+│   │   │       ├── analytics/
+│   │   │       │   └── page.tsx      # Sales analytics
+│   │   │       └── profile/
+│   │   │           └── page.tsx      # Seller settings
+│   │   │
+│   │   ├── (auth)/                   # Auth layout group
+│   │   │   ├── layout.tsx            # Auth layout (minimal, centered)
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx          # Login page
+│   │   │   ├── register/
+│   │   │   │   └── page.tsx          # Registration page
+│   │   │   └── createProfile/
+│   │   │       └── customerProfile/  # Customer profile setup
+│   │   │
+│   │   ├── api/                      # API routes (backend)
+│   │   │   ├── auth/
+│   │   │   │   ├── login/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── register/
+│   │   │   │   │   └── route.ts
+│   │   │   │   ├── logout/
+│   │   │   │   │   └── route.ts
+│   │   │   │   └── me/
+│   │   │   │       └── route.ts
+│   │   │   ├── products/
+│   │   │   │   ├── route.ts
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts
+│   │   │   ├── orders/
+│   │   │   │   ├── route.ts
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts
+│   │   │   └── cart/
+│   │   │       ├── route.ts
+│   │   │       └── [id]/
+│   │   │           └── route.ts
+│   │   │
+│   │   ├── globals.css               # Global styles
+│   │   ├── layout.tsx                # Root layout
+│   │   └── not-found.tsx             # 404 page
+│   │
+│   ├── components/                   # React components
+│   │   ├── customer/                 # Customer-specific components
+│   │   │   ├── CustomerProductCard.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   └── OrderCard.tsx
+│   │   │
+│   │   ├── seller/                   # Seller-specific components
+│   │   │   ├── ProductEditForm.tsx
+│   │   │   ├── ProductForm.tsx
+│   │   │   ├── ProductView.tsx
+│   │   │   ├── SellerOrderCard.tsx
+│   │   │   ├── SellerProductList.tsx
+│   │   │   └── SellerSideBar.tsx
+│   │   │
+│   │   ├── shared/                   # Reusable components
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Loading.tsx
+│   │   │   ├── modal.tsx
+│   │   │   ├── AddressCard.tsx
+│   │   │   ├── AddressForm.tsx
+│   │   │   ├── ProductCard.tsx
+│   │   │   ├── OrderCard.tsx
+│   │   │   ├── OrderStatusBadge.tsx
+│   │   │   ├── OrderTimeline.tsx
+│   │   │   └── PaymentStatusBadge.tsx
+│   │   │
+│   │   └── ui/                       # shadcn/ui components
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── input.tsx
+│   │       ├── sidebar.tsx
+│   │       ├── accordion.tsx
+│   │       ├── dialog.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── form.tsx
+│   │       ├── table.tsx
+│   │       ├── tabs.tsx
+│   │       ├── pagination.tsx
+│   │       └── ... (other UI components)
+│   │
+│   ├── hooks/                        # Custom React hooks
+│   │   ├── useAuth.ts                # Authentication state & methods
+│   │   ├── useCart.ts                # Shopping cart management
+│   │   ├── useProduct.ts             # Product data management
+│   │   ├── useOrder.ts               # Order management
+│   │   ├── useAddress.ts             # Address management
+│   │   ├── useWishlist.ts            # Wishlist functionality
+│   │   ├── useAsyncOperation.ts      # Async operation handling
+│   │   ├── useUploadImage.ts         # Image upload handling
+│   │   ├── useSellerData.ts          # Seller dashboard data
+│   │   ├── useIsMobile.ts            # Mobile detection
+│   │   ├── types/
+│   │   │   └── hook-types.ts         # Hook TypeScript types
+│   │   └── utils/
+│   │       └── hook-utils.ts         # Hook utilities
+│   │
+│   ├── lib/                          # Utility functions & configuration
+│   │   ├── api-client.ts             # API client (fetch wrapper)
+│   │   ├── auth.ts                   # Authentication utilities
+│   │   ├── supabaseClient.ts         # Supabase client setup
+│   │   ├── constants.ts              # API endpoints, storage keys
+│   │   └── utils.ts                  # General utilities
+│   │
+│   ├── types/                        # TypeScript type definitions
+│   │   ├── user.ts                   # User & Auth types
+│   │   ├── product.ts                # Product types
+│   │   ├── order.ts                  # Order types
+│   │   ├── cart.ts                   # Cart types
+│   │   ├── address.ts                # Address types
+│   │   ├── api.ts                    # API response types
+│   │   └── sellerStat.ts             # Seller statistics types
+│   │
+│   ├── utils/                        # Utility functions
+│   │   ├── cn.ts                     # Class name utilities
+│   │   ├── helpers.ts                # Helper functions (format, convert)
+│   │   └── validators.ts             # Form validation utilities
+│   │
+│   └── middleware.ts                 # Next.js middleware for route protection
+│
+├── public/                           # Static assets
+│   └── images/                       # Product images, etc.
+│
+├── .env.local                        # Environment variables (local)
+├── .env.example                      # Environment variables template
+├── components.json                   # shadcn/ui configuration
+├── eslint.config.mjs                 # ESLint configuration
+├── next.config.ts                    # Next.js configuration
+├── next-env.d.ts                     # Next.js TypeScript definitions
+├── package.json                      # Project dependencies
+├── postcss.config.mjs                # PostCSS configuration
+├── tailwind.config.ts                # Tailwind CSS configuration
+├── tsconfig.json                     # TypeScript configuration
+├── FIXES_NEEDED.md                   # List of fixes needed
+├── COMPLETION_PLAN.md                # Project completion roadmap
+└── README.md                         # This file
+```
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **Next.js 13+** - React framework with App Router
+- **React 18** - UI library
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - High-quality, accessible UI components
+- **React Hook Form** - Efficient form handling
+- **SWR/React Query** - Data fetching (based on hooks)
+
+### Backend Services
+- **Supabase** - Backend as a service (authentication, database)
+- **REST API** - Custom API routes in Next.js
+
+### Development Tools
+- **ESLint** - Code quality
+- **TypeScript** - Type safety
+- **Next.js Middleware** - Route protection & authentication
+
+## 🔐 Authentication & Authorization
+
+The application uses a **middleware-based authentication system**:
+
+```typescript
+// src/middleware.ts
+- Checks for valid auth token
+- Protects customer, seller, and admin routes
+- Allows public access to home, products, login, and register
+- Redirects unauthorized users to login page
+```
+
+### User Roles
+- **Customer** - Browse products, make purchases, view orders
+- **Seller** - Manage products, view sales, track orders
+- **Admin** - (Future) System administration
+
+## 🎯 Key Features
+
+### ✅ Implemented
+- Product Browsing - Browse and search products
+- Shopping Cart - Add/remove items, manage quantities
+- Checkout - Multi-step checkout process
+- Order Management - Track orders, view history
+- User Profiles - Customer and seller profiles
+- Seller Dashboard - Product and order management
+- Responsive Design - Mobile-friendly interface
+- Authentication - Secure login/registration
+
+### 📋 In Progress/Planned
+- Wishlist - Save favorite products
+- Ratings & Reviews - Product reviews
+- Payment Integration - Stripe or similar
+- Admin Panel - System management
+- Email Notifications - Order updates
+- Advanced Analytics - Seller insights
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+The easiest way to deploy a Next.js application:
+
+1. Push your code to a Git repository (GitHub, GitLab, etc.)
+2. Connect your repository to [Vercel](https://vercel.com)
+3. Vercel automatically builds and deploys on push
+4. Configure environment variables in Vercel dashboard
+
+### Other Platforms
+- **Docker** - Containerize the application
+- **AWS** - EC2, Lambda, or Amplify
+- **Azure** - App Service or Container Instances
+- **DigitalOcean** - App Platform or Droplets
+
+## 📚 Documentation & Resources
+
+### Official Resources
+- [Next.js Documentation](https://nextjs.org/docs) - Official Next.js guide
+- [React Documentation](https://react.dev) - Official React guide
+- [Tailwind CSS](https://tailwindcss.com/docs) - Utility-first CSS
+- [shadcn/ui](https://ui.shadcn.com) - Component library
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/) - TypeScript guide
+
+### Project Documentation
+- See `FIXES_NEEDED.md` - Issues that need fixing
+- See `COMPLETION_PLAN.md` - Feature completion roadmap
+
+## 🤝 Contributing
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Commit your changes: `git commit -m "Add your feature"`
+3. Push to the branch: `git push origin feature/your-feature`
+4. Open a Pull Request
+
+## 📝 Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+
+# Other Configuration (add as needed)
+```
+
+## 📄 License
+
+[Add your license information here]
+
+## 👨‍💻 Author
+
+[Ahmed1092002](https://github.com/Ahmed1092002)
+
+---
+
+**Last Updated**: December 2025
+**Branch**: add_profiles
+**Status**: Active Development
