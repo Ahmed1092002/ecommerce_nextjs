@@ -23,8 +23,8 @@ export default function WishlistPage() {
   async function loadWishlist() {
     setIsLoading(true);
     try {
-      const wishlistItems = await getWishlistItems(1);
-      setItems(wishlistItems || []);
+      const response = await getWishlistItems(1);
+      setItems(response?.data || []);
     } catch (error) {
       console.error("Failed to load wishlist:", error);
       toast.error("Failed to load wishlist items");
@@ -140,7 +140,7 @@ export default function WishlistPage() {
 
       {/* Wishlist Items Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items?.data.map((item) => (
+        {items.map((item) => (
           <div key={item.id} className="relative group">
             {/* Remove from Wishlist Button */}
             <Button
@@ -163,10 +163,6 @@ export default function WishlistPage() {
                 image: item.image,
                 rating: 4.5,
               }}
-              isInWishlist={true}
-              onWishlistToggle={() =>
-                handleRemoveFromWishlist(item.id as number)
-              }
               onAddToCart={() => handleAddToCart(item.id as number, item.name)}
               link="/product/"
             />

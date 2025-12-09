@@ -6,21 +6,26 @@ import { useProduct } from "@/hooks/useProduct";
 import { useEffect, useState } from "react";
 import { ProductData } from "@/types/product";
 import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
+import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "react-toastify";
 
 export default function HomePage() {
   const [products, setProducts] = useState<ProductData[]>();
+  const { user } = useAuth();
 
   const { bestSellers } = useProduct();
-  async function fetchBestSellers() {
-    try {
-      const products = await bestSellers();
-      console.log("Best Sellers:", products);
-      setProducts(products);
-    } catch (error) {
-      console.error("Error fetching best sellers:", error);
-    }
-  }
+  const { addToCart } = useCart();
+  
   useEffect(() => {
+    async function fetchBestSellers() {
+      try {
+        const products = await bestSellers();
+        setProducts(products);
+      } catch (error) {
+        console.error("Error fetching best sellers:", error);
+      }
+    }
     fetchBestSellers();
   }, []);
   return (
@@ -123,9 +128,12 @@ export default function HomePage() {
                   stock:
                     typeof product.quantity === "number" ? product.quantity : 0,
                 }}
-                onAddToCart={() => {
-                  // Add to cart logic here
-                  console.log("Add to cart:", product.id);
+                onAddToCart={async () => {
+                  if (!user) {
+                    toast.error("Please log in to add products to your cart");
+                    return;
+                  }
+                  await addToCart({ productId: product.id, quantity: 1 });
                 }}
                 link="/product/"
               />

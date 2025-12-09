@@ -48,4 +48,5 @@ export interface UpdateProductData {
   price?: number;
   quantity?: number;
   discount?: number;
+  finalPrice?: number;
 }

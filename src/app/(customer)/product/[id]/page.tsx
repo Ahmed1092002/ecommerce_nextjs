@@ -1,6 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useProduct } from "@/hooks/useProduct";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,8 @@ export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const { getProductById, loading: loadingProduct } = useProduct();
+  const { user } = useAuth();
+
   const { addToCart, loading: loadingCart } = useCart();
   const { addToWishlist, removeFromWishlist } = useWishlist();
   const [product, setProduct] = useState<ProductDetail | null>(null);
@@ -68,6 +71,10 @@ export default function ProductDetailsPage() {
   }, [id]);
 
   async function addProductToCart() {
+    if (!user) {
+      toast.error("Please log in to add products to your cart");
+      return;
+    }
     if (!product) return;
     toast.loading(`Adding ${quantity} ${product.name} to cart...`);
     await addToCart({
@@ -79,6 +86,10 @@ export default function ProductDetailsPage() {
   }
 
   async function toggleWishlist() {
+    if (!user) {
+      toast.error("Please log in to manage your wishlist");
+      return;
+    }
     if (!product) return;
 
     try {
@@ -100,8 +111,6 @@ export default function ProductDetailsPage() {
       setQuantity(quantity - 1);
     }
   };
-
-
 
   if (loadingProduct) {
     return (
