@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api-client";
-import { CreateProductData, Product } from "@/types/product";
+import { CreateProductData, Product, ProductData } from "@/types/product";
 import { SearchParams } from "./types/hook-types";
 import { buildQueryString } from "./utils/hook-utils";
 import { useAsyncOperation } from "./useAsyncOperation";
@@ -16,6 +16,7 @@ export interface UseProductReturn {
   getProductById: (id: string) => Promise<Product>;
   updateProduct: (data: Product) => Promise<Product>;
   deleteProduct: (id: number) => Promise<void>;
+  bestSellers: () => Promise<ProductData[]>;
 }
 
 export function useProduct(): UseProductReturn {
@@ -75,6 +76,12 @@ export function useProduct(): UseProductReturn {
       router.push("/seller/product");
     }, "Product deleted successfully!");
   }
+  async function bestSellers(): Promise<ProductData[]> {
+    return withLoadingAndError(async () => {
+      const response = await api.get<ProductData[]>(`/products/bestSellers`);
+      return response;
+    }, "Fetched best sellers successfully!");
+  }
 
   return {
     loading,
@@ -85,5 +92,6 @@ export function useProduct(): UseProductReturn {
     getProductById,
     updateProduct,
     deleteProduct,
+    bestSellers,
   };
 }

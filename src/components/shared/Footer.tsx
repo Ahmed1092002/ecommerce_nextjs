@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "../../../public/images/logo.png";
+import logo from "../../../public/images/logo-white.png";
 import Image from "next/image";
 export function Footer() {
   return (

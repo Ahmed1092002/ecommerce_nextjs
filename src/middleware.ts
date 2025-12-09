@@ -22,8 +22,16 @@ export function middleware(request: NextRequest) {
   const isLoginPage = pathname === "/login";
   const isRegisterPage = pathname === "/register";
   const isProductsPage = pathname.startsWith("/products");
-  
-  const isPublicRoute = isHomePage || isLoginPage || isRegisterPage || isProductsPage;
+  const isAboutPage = pathname.startsWith("/about");
+  const isContactPage = pathname.startsWith("/contact");
+
+  const isPublicRoute =
+    isHomePage ||
+    isLoginPage ||
+    isRegisterPage ||
+    isProductsPage ||
+    isContactPage ||
+    isAboutPage;
 
   // ============================================
   // STEP 3: Handle public routes
@@ -80,8 +88,9 @@ export function middleware(request: NextRequest) {
   const isCheckoutPage = pathname.startsWith("/checkout");
   const isOrdersPage = pathname.startsWith("/orders");
   const isProfilePage = pathname.startsWith("/profile");
-  
-  const isCustomerRoute = isCartPage || isCheckoutPage || isOrdersPage || isProfilePage;
+
+  const isCustomerRoute =
+    isCartPage || isCheckoutPage || isOrdersPage || isProfilePage;
 
   if (isCustomerRoute) {
     // If seller tries to access customer routes

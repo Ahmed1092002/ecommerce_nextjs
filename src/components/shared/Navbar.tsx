@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "../../../public/images/logo.png";
+import logo from "../../../public/images/logo-white.png";
 import Image from "next/image";
 
 export function Navbar() {
@@ -58,18 +58,7 @@ export function Navbar() {
             >
               Shop
             </Link>
-            <Link
-              href="/about"
-              className="transition-colors hover:text-primary text-muted-foreground"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="transition-colors hover:text-primary text-muted-foreground"
-            >
-              Contact
-            </Link>
+  
           </nav>
         </div>
 
