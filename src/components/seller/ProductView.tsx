@@ -24,7 +24,7 @@ export function ProductView({ product }: ProductViewProps) {
             label="Final Price"
             value={
               <span className="text-xl font-bold text-primary">
-                ${product.finalPrice?.toFixed(2) ?? "-"}
+                ${product?.finalPrice?.toFixed(2) ?? "-"}
               </span>
             }
           />

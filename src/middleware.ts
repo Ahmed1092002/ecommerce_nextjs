@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
   const isHomePage = pathname === "/";
   const isLoginPage = pathname === "/login";
   const isRegisterPage = pathname === "/register";
-  const isProductsPage = pathname.startsWith("/products");
+  const isProductsPage = pathname.startsWith("/product");
   const isAboutPage = pathname.startsWith("/about");
   const isContactPage = pathname.startsWith("/contact");
 

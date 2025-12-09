@@ -1,9 +1,9 @@
 import { useAsyncOperation } from "./useAsyncOperation";
 import { api } from "../lib/api-client";
-import { Product } from "@/types/product";
+import { Product, ProductData } from "@/types/product";
 import { buildQueryString } from "./utils/hook-utils";
 
-export interface WishlistItem extends Product {
+export interface WishlistItem extends ProductData {
   wishlistId?: number;
 }
 
@@ -12,7 +12,13 @@ export interface useWishlistReturn {
   error: string | null;
   addToWishlist: (productId: number) => Promise<any>;
   removeFromWishlist: (productId: number) => Promise<any>;
-  getWishlistItems: (page: number) => Promise<WishlistItem[]>;
+  getWishlistItems: (page: number) => Promise<{
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalElements: number;
+    data: WishlistItem[];
+  }>;
 }
 
 export function useWishlist(): useWishlistReturn {
@@ -37,15 +43,25 @@ export function useWishlist(): useWishlistReturn {
     }, "Product removed from wishlist!");
   }
 
-  async function getWishlistItems(page: number): Promise<WishlistItem[]> {
+  async function getWishlistItems(page: number): Promise<{
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalElements: number;
+    data: WishlistItem[];
+  }> {
     return withLoadingAndError(async () => {
       const params = {
         page,
       };
       const query = buildQueryString(params);
-      const response = await api.get<WishlistItem[]>(
-        `/customer/wishlist/items${query}`
-      );
+      const response = await api.get<{
+        pageNumber: number;
+        pageSize: number;
+        totalPages: number;
+        totalElements: number;
+        data: WishlistItem[];
+      }>(`/customer/wishlist/items${query}`);
       return response;
     }, "");
   }

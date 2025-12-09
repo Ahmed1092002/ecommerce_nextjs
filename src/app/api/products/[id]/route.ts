@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const payload = await req.json(); // whatever the client sends
     // TODO: handle payload (save to DB, call service, etc.)
     return NextResponse.json({ ok: true, id, received: payload });

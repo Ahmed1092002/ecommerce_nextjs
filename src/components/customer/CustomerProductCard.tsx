@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/utils/helpers";
 import { ShoppingCart, Star, Heart, Eye, TrendingUp } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CustomerProductCardProps {
   product: {
@@ -37,7 +38,7 @@ export function CustomerProductCard({
   const isLowStock = product.stock > 0 && product.stock < 5;
   const hasDiscount = product.discount && product.discount > 0;
   const displayPrice = product.finalPrice || product.price;
-
+  const { user } = useAuth();
   return (
     <Card className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Product Image Section */}
@@ -102,8 +103,6 @@ export function CustomerProductCard({
             </Badge>
           )}
         </div>
-
-
       </CardHeader>
 
       {/* Product Details Section */}
@@ -114,7 +113,6 @@ export function CustomerProductCard({
             {product.name}
           </h3>
         </Link>
-
 
         {/* Price Section */}
         <div className="flex-column items-baseline gap-2 pt-2 ">
