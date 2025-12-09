@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Shop the best products with fast shipping and excellent support",
   icons: {
-    icon: "/images/logo.ico",
+    icon: "/favicon.ico",
   },
 };
 

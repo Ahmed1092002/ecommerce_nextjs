@@ -480,10 +480,7 @@ export default function Product() {
                       image: it.image,
                       rating: 4.5, // You can add actual rating from API
                     }}
-                    isInWishlist={wishlistMap.get(Number(it.id)) || false}
-                    onWishlistToggle={() =>
-                      handleWishlistToggle(Number(it.id), it.name)
-                    }
+
                     onAddToCart={async () => {
                       await addToCart({
                         productId: Number(it.id),

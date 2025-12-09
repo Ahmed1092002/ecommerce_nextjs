@@ -3,7 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Store } from "lucide-react";
-import logo from "../../../public/images/logo-white.png";
+import logo from "../../../public/images/logo-transparent.png";
 import Image from "next/image";
 export default function AuthLayout({
   children,
@@ -11,7 +11,6 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const isLogin = pathname === "/login";
 
   return (
@@ -55,43 +54,7 @@ export default function AuthLayout({
 
           {children}
 
-          <div className="relative gap-2 flex flex-col">
-            <div className="inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" type="button" disabled>
-              Github
-            </Button>
-            <Button variant="outline" type="button" disabled>
-              Google
-            </Button>
-          </div>
-
-          <p className="px-8 text-center text-sm text-muted-foreground">
-            By clicking continue, you agree to our{" "}
-            <Link
-              href="/terms"
-              className="underline underline-offset-4 hover:text-primary"
-            >
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/privacy"
-              className="underline underline-offset-4 hover:text-primary"
-            >
-              Privacy Policy
-            </Link>
-            .
-          </p>
+ 
         </div>
       </div>
     </div>

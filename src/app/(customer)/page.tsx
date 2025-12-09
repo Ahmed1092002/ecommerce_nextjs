@@ -1,8 +1,28 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Package, ShieldCheck, Truck } from "lucide-react";
+import { useProduct } from "@/hooks/useProduct";
+import { useEffect, useState } from "react";
+import { ProductData } from "@/types/product";
+import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
 
 export default function HomePage() {
+  const [products, setProducts] = useState<ProductData[]>();
+
+  const { bestSellers } = useProduct();
+  async function fetchBestSellers() {
+    try {
+      const products = await bestSellers();
+      console.log("Best Sellers:", products);
+      setProducts(products);
+    } catch (error) {
+      console.error("Error fetching best sellers:", error);
+    }
+  }
+  useEffect(() => {
+    fetchBestSellers();
+  }, []);
   return (
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
@@ -89,10 +109,34 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* Placeholder for ProductCards - In a real app, map through products here */}
-          <div className="col-span-full text-center py-12 text-muted-foreground border border-dashed rounded-lg">
-            Product Grid will appear here
-          </div>
+          {products && products.length > 0 ? (
+            products.map((product) => (
+              <CustomerProductCard
+                key={product.id}
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  discount: product.discount,
+                  finalPrice: product.finalPrice,
+                  stock:
+                    typeof product.quantity === "number" ? product.quantity : 0,
+                }}
+                onAddToCart={() => {
+                  // Add to cart logic here
+                  console.log("Add to cart:", product.id);
+                }}
+                link="/product/"
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12 text-muted-foreground border border-dashed rounded-lg">
+              {products === undefined
+                ? "Loading products..."
+                : "No products available"}
+            </div>
+          )}
         </div>
       </section>
     </div>
