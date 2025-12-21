@@ -9,25 +9,58 @@ import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
+import { useWishlist } from "@/hooks/useWishlist";
 
 export default function HomePage() {
   const [products, setProducts] = useState<ProductData[]>();
   const { user } = useAuth();
-
   const { bestSellers } = useProduct();
   const { addToCart } = useCart();
-  
+  const { addToWishlist, removeFromWishlist } = useWishlist();
+
+  async function fetchBestSellers() {
+    try {
+      const products = await bestSellers();
+      setProducts(products);
+    } catch (error) {
+      console.error("Error fetching best sellers:", error);
+    }
+  }
+
   useEffect(() => {
-    async function fetchBestSellers() {
+    (async () => {
       try {
         const products = await bestSellers();
         setProducts(products);
       } catch (error) {
         console.error("Error fetching best sellers:", error);
       }
-    }
-    fetchBestSellers();
+    })();
   }, []);
+
+  async function handleWishlistToggle(productId: number, productName: string) {
+    if (!products) return;
+    const idx = products.findIndex((it) => it.id === productId);
+    if (idx === -1) return;
+    const isInWishlist = !!products[idx].inWishlist;
+    try {
+      if (!user) {
+        toast.error("Please log in to add products to your wishlist");
+        return;
+      }
+      if (isInWishlist) {
+        await removeFromWishlist(productId);
+        toast.success(`${productName} removed from wishlist`);
+      } else {
+        await addToWishlist(productId);
+        toast.success(`${productName} added to wishlist`);
+      }
+      await fetchBestSellers();
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+      toast.error("Failed to update wishlist");
+    }
+  }
   return (
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
@@ -127,6 +160,10 @@ export default function HomePage() {
                   finalPrice: product.finalPrice,
                   stock:
                     typeof product.quantity === "number" ? product.quantity : 0,
+                  inWishlist: !!product.inWishlist,
+                }}
+                onWishlistToggle={async () => {
+                  await handleWishlistToggle(product.id, product.name);
                 }}
                 onAddToCart={async () => {
                   if (!user) {

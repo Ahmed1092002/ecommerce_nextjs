@@ -23,7 +23,7 @@ export default function SellerPage() {
     if (user) {
       fetchSellerStats().then((data) => setStats(data));
     }
-  }, [user, fetchSellerStats]);
+  }, [user]);
 
   return (
     <div>

@@ -16,44 +16,24 @@ import {
   Shield,
   ChevronRight,
   Home,
-  Star,
+  // Star,
   Minus,
   Plus,
 } from "lucide-react";
 import { formatPrice } from "@/utils/helpers";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
-
-type ProductDetail = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  discount: number;
-  finalPrice: number;
-  image?: string;
-  colors?: string[];
-  storage?: string[];
-  specifications?: {
-    screenSize?: string;
-    cpu?: string;
-    cores?: number;
-    mainCamera?: string;
-    frontCamera?: string;
-    batteryCapacity?: string;
-  };
-};
+import { ProductData } from "@/types/product";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const { getProductById, loading: loadingProduct } = useProduct();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const { user } = useAuth();
 
-  const { addToCart, loading: loadingCart } = useCart();
-  const { addToWishlist, removeFromWishlist } = useWishlist();
-  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState<ProductData | null>(null);
 
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -63,11 +43,13 @@ export default function ProductDetailsPage() {
       if (id) {
         const response = await getProductById(id as string);
         if (response) {
-          setProduct(response as unknown as ProductDetail);
+          setProduct(response);
+          setIsWishlisted(response.inWishlist || false);
         }
       }
     }
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function addProductToCart() {
@@ -91,9 +73,16 @@ export default function ProductDetailsPage() {
       return;
     }
     if (!product) return;
-
     try {
-      await addToWishlist(product.id);
+      if (isWishlisted) {
+        await removeFromWishlist(product.id);
+        setIsWishlisted(false);
+        toast.success("Removed from wishlist");
+      } else {
+        await addToWishlist(product.id);
+        setIsWishlisted(true);
+        toast.success("Added to wishlist");
+      }
     } catch (error) {
       console.error("Failed to toggle wishlist:", error);
       toast.error("Failed to update wishlist");
@@ -144,7 +133,7 @@ export default function ProductDetailsPage() {
           <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
           <h2 className="text-2xl font-bold mb-2">Product not found</h2>
           <p className="text-muted-foreground mb-6">
-            The product you're looking for doesn't exist.
+            The product you&#39;re looking for doesn&#39;t exist.
           </p>
           <Button onClick={() => router.push("/product")}>
             Browse Products
@@ -160,7 +149,7 @@ export default function ProductDetailsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Breadcrumbs */}
-      <div className="border-b border-[var(--border)]">
+      <div className="border-b border-(--border)">
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
             <Home className="w-4 h-4" />
@@ -185,8 +174,8 @@ export default function ProductDetailsPage() {
           {/* Image Gallery */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square bg-muted rounded-2xl overflow-hidden border border-[var(--border)]">
-              {product.image && product.image.length > 0 ? (
+            <div className="relative aspect-square bg-muted rounded-2xl overflow-hidden border border-(--border)">
+              {product.image !== "" ? (
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -214,19 +203,6 @@ export default function ProductDetailsPage() {
               <h1 className="text-3xl lg:text-4xl font-bold tracking-tight mb-3">
                 {product.name}
               </h1>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  (4.9 • 128 reviews)
-                </span>
-              </div>
             </div>
 
             {/* Price */}
@@ -247,15 +223,15 @@ export default function ProductDetailsPage() {
                 {product.description ||
                   "Enhanced capabilities thanks to an enlarged display of 6.7 inches and work without recharging throughout the day. Incredible photos in weak, yes and in bright lighting using the new system with two cameras."}
               </p>
-              <button className="text-sm font-medium text-primary hover:underline">
-                more...
-              </button>
+
             </div>
 
             {/* Quantity Selector */}
             <div className="flex items-center gap-4">
-              <label className="text-sm font-semibold">Quantity:</label>
-              <div className="flex items-center border border-[var(--border)] rounded-lg">
+              <label className="text-sm font-semibold" htmlFor="quantity-span">
+                Quantity:
+              </label>
+              <div className="flex items-center border border-(--border) rounded-lg">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -265,7 +241,10 @@ export default function ProductDetailsPage() {
                 >
                   <Minus className="w-4 h-4" />
                 </Button>
-                <span className="px-6 py-2 font-semibold min-w-[60px] text-center">
+                <span
+                  id="quantity-span"
+                  className="px-6 py-2 font-semibold min-w-[60px] text-center"
+                >
                   {quantity}
                 </span>
                 <Button
@@ -293,10 +272,10 @@ export default function ProductDetailsPage() {
               >
                 <Heart
                   className={`w-5 h-5 ${
-                    isWishlisted ? "fill-destructive text-destructive" : ""
+                    isWishlisted ? "fill-destructive text-destructive" : " "
                   }`}
                 />
-                Add to Wishlist
+                {isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
               </Button>
               <Button
                 size="lg"
@@ -310,7 +289,7 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Delivery Info */}
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-[var(--border)]">
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-(--border)">
               <div className="flex flex-col items-center text-center gap-2">
                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
                   <Truck className="w-6 h-6 text-muted-foreground" />
