@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api-client";
-import { CreateProductData, Product, ProductData } from "@/types/product";
+import {
+  CreateProductData,
+  Product,
+  ProductData,
+  UpdateProductData,
+} from "@/types/product";
 import { SearchParams } from "./types/hook-types";
 import { buildQueryString } from "./utils/hook-utils";
 import { useAsyncOperation } from "./useAsyncOperation";
@@ -14,7 +19,7 @@ export interface UseProductReturn {
   getSellerProducts: (params?: SearchParams) => Promise<Product>;
   getCustomerProducts: (params?: SearchParams) => Promise<Product>;
   getProductById: (id: string) => Promise<ProductData>;
-  updateProduct: (data: Product) => Promise<Product>;
+  updateProduct: (data: UpdateProductData) => Promise<Product>;
   deleteProduct: (id: number) => Promise<void>;
   bestSellers: () => Promise<ProductData[]>;
 }
@@ -59,7 +64,7 @@ export function useProduct(): UseProductReturn {
     });
   }
 
-  async function updateProduct(data: Product): Promise<Product> {
+  async function updateProduct(data: UpdateProductData): Promise<Product> {
     return withLoadingAndError(async () => {
       const response = await api.put<Product>(
         "/seller/products/updateproduct",

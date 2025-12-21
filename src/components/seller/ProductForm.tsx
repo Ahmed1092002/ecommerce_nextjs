@@ -141,7 +141,7 @@ export default function ProductForm({
         image: finalImageUrl,
         // Preserve ID if editing, though it might not be strictly necessary depending on API
         ...(isEditMode && initialData ? { id: initialData.id } : {}),
-      } as any);
+      } as CreateProductData | UpdateProductData);
     }
   };
 
