@@ -167,7 +167,7 @@ export default function Product() {
 
   // Generate pagination items with ellipsis
   const generatePaginationItems = () => {
-    const items = [];
+    const items: (number | string)[] = [];
     const maxVisible = 5;
 
     if (totalPages <= maxVisible) {

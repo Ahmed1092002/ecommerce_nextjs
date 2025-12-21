@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useProduct } from "@/hooks/useProduct";
 import { Button } from "@/components/shared/Button";
-import { UpdateProductData } from "@/types/product";
+import { CreateProductData, UpdateProductData } from "@/types/product";
 import Link from "next/link";
 import { ChevronLeft, Trash2 } from "lucide-react";
 import ProductForm from "@/components/seller/ProductForm";
@@ -30,8 +30,7 @@ export default function ProductSellerDetails() {
         const res = await getProductById(id as string);
         if (!mounted) return;
 
-        const pData =
-          Array.isArray(res?.data) && res.data.length > 0 ? res.data[0] : res;
+        const pData = res;
 
         if (pData) {
           setProductData(pData as UpdateProductData);
@@ -47,8 +46,12 @@ export default function ProductSellerDetails() {
     };
   }, []);
 
-  const handleUpdate = async (data: UpdateProductData | any) => {
-    await updateProduct(data);
+  const handleUpdate = async (data: UpdateProductData | CreateProductData) => {
+    // If data does not have id, assign it from params (for UpdateProductData)
+    if (!("id" in data) && id) {
+      (data as UpdateProductData).id = Array.isArray(id) ? Number(id[0]) : Number(id);
+    }
+    await updateProduct(data as UpdateProductData);
   };
 
   const handleDelete = async () => {
