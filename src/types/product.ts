@@ -14,6 +14,7 @@ export interface ProductData {
   quantity: number;
   discount: number;
   finalPrice: number;
+  inWishlist?: boolean;
 }
 interface PaginatedProducts {
   pageNumber: number;

@@ -5,6 +5,14 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
@@ -15,6 +23,9 @@ export default function WishlistPage() {
   const { addToCart } = useCart();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     loadWishlist();
@@ -36,7 +47,7 @@ export default function WishlistPage() {
   async function handleRemoveFromWishlist(productId: number) {
     try {
       await removeFromWishlist(productId);
-      setItems(items.filter((item) => item.id !== productId));
+      setItems((prev) => prev.filter((item) => item.id !== productId));
       toast.success("Removed from wishlist");
     } catch (error) {
       console.error("Failed to remove from wishlist:", error);
@@ -54,17 +65,7 @@ export default function WishlistPage() {
     }
   }
 
-  async function handleMoveAllToCart() {
-    try {
-      for (const item of items) {
-        await addToCart({ productId: item.id as number, quantity: 1 });
-      }
-      toast.success("All items moved to cart!");
-    } catch (error) {
-      console.error("Failed to move items to cart:", error);
-      toast.error("Failed to move some items to cart");
-    }
-  }
+
 
   if (isLoading) {
     return (
@@ -112,6 +113,13 @@ export default function WishlistPage() {
     );
   }
 
+  // Pagination logic
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const paginatedItems = items.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header Section */}
@@ -125,33 +133,12 @@ export default function WishlistPage() {
             {items.length} {items.length === 1 ? "item" : "items"} saved
           </p>
         </div>
-        {items.length > 0 && (
-          <Button
-            onClick={handleMoveAllToCart}
-            variant="default"
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            <ShoppingBag className="mr-2 h-5 w-5" />
-            Move All to Cart
-          </Button>
-        )}
       </div>
 
       {/* Wishlist Items Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items.map((item) => (
+        {paginatedItems.map((item) => (
           <div key={item.id} className="relative group">
-            {/* Remove from Wishlist Button */}
-            <Button
-              onClick={() => handleRemoveFromWishlist(item.id as number)}
-              variant="destructive"
-              size="icon"
-              className="absolute -top-2 -right-2 z-10 h-8 w-8 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-
             <CustomerProductCard
               product={{
                 id: item.id?.toString() || "",
@@ -162,13 +149,69 @@ export default function WishlistPage() {
                 stock: item.quantity || 0,
                 image: item.image,
                 rating: 4.5,
+                inWishlist: item.inWishlist,
               }}
+              showWishlist={false}
               onAddToCart={() => handleAddToCart(item.id as number, item.name)}
               link="/product/"
             />
+            {/* Remove from wishlist button */}
+            <button
+              className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-red-100 transition"
+              title="Remove from wishlist"
+              onClick={() => handleRemoveFromWishlist(item.id as number)}
+            >
+              <Trash2 className="h-5 w-5 text-red-500" />
+            </button>
           </div>
         ))}
       </div>
+
+      {/* Pagination Controls (Shadcn UI) */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  aria-disabled={currentPage === 1}
+                  tabIndex={currentPage === 1 ? -1 : 0}
+                  style={{
+                    pointerEvents: currentPage === 1 ? "none" : undefined,
+                    opacity: currentPage === 1 ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, idx) => (
+                <PaginationItem key={idx}>
+                  <PaginationLink
+                    isActive={currentPage === idx + 1}
+                    onClick={() => setCurrentPage(idx + 1)}
+                    href="#"
+                  >
+                    {idx + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  aria-disabled={currentPage === totalPages}
+                  tabIndex={currentPage === totalPages ? -1 : 0}
+                  style={{
+                    pointerEvents:
+                      currentPage === totalPages ? "none" : undefined,
+                    opacity: currentPage === totalPages ? 0.5 : 1,
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

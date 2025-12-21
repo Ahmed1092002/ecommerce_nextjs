@@ -13,7 +13,7 @@ export interface UseProductReturn {
   createProduct: (data: CreateProductData) => Promise<Product>;
   getSellerProducts: (params?: SearchParams) => Promise<Product>;
   getCustomerProducts: (params?: SearchParams) => Promise<Product>;
-  getProductById: (id: string) => Promise<Product>;
+  getProductById: (id: string) => Promise<ProductData>;
   updateProduct: (data: Product) => Promise<Product>;
   deleteProduct: (id: number) => Promise<void>;
   bestSellers: () => Promise<ProductData[]>;
@@ -46,15 +46,15 @@ export function useProduct(): UseProductReturn {
   async function getCustomerProducts(params?: SearchParams): Promise<Product> {
     return withLoadingAndError(async () => {
       const query = buildQueryString(params);
-      const endpoint = `/customer/products/GetProducts${query}`;
+      const endpoint = `/products/GetProducts${query}`;
       const response = await api.get<Product>(endpoint);
       return response;
     });
   }
 
-  async function getProductById(id: string): Promise<Product> {
+  async function getProductById(id: string): Promise<ProductData> {
     return withLoadingAndError(async () => {
-      const response = await api.get<Product>(`/products/getProductByID/${id}`);
+      const response = await api.get<ProductData>(`/products/getProductByID/${id}`);
       return response;
     });
   }

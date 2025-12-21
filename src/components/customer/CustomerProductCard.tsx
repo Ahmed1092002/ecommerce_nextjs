@@ -1,4 +1,5 @@
 import Link from "next/link";
+import React from "react";
 import Image from "next/image";
 import {
   Card,
@@ -22,8 +23,11 @@ interface CustomerProductCardProps {
     rating?: number;
     discount?: number;
     finalPrice?: number;
+    inWishlist?: boolean;
   };
+  showWishlist?: boolean;
   onAddToCart?: () => void;
+  onWishlistToggle?: () => void; // Optional handler for wishlist
 
   link?: string;
 }
@@ -31,18 +35,39 @@ interface CustomerProductCardProps {
 export function CustomerProductCard({
   product,
   onAddToCart,
-
+  showWishlist = true,
   link = "/product/",
+  onWishlistToggle,
 }: CustomerProductCardProps) {
   const isOutOfStock = product.stock === 0;
   const isLowStock = product.stock > 0 && product.stock < 5;
   const hasDiscount = product.discount && product.discount > 0;
   const displayPrice = product.finalPrice || product.price;
   const { user } = useAuth();
+  // Wishlist state (for demo, local only)
+  const [wishlisted, setWishlisted] = React.useState(
+    product.inWishlist || false
+  );
+
   return (
     <Card className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       {/* Product Image Section */}
       <CardHeader className="relative h-64 p-0 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Wishlist Button (top-right) */}
+        {showWishlist && (
+          <button
+            type="button"
+            aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={onWishlistToggle}
+            className="absolute right-3 top-3 z-20 rounded-full bg-white/90 p-2 shadow-md hover:bg-pink-100 transition-colors"
+          >
+            <Heart
+              className={`h-6 w-6 ${
+                wishlisted ? "fill-pink-500 text-pink-500" : "text-gray-400"
+              }`}
+            />
+          </button>
+        )}
         <Link href={`${link}${product.id}`} className="block h-full w-full">
           {product.image ? (
             <Image
@@ -82,7 +107,7 @@ export function CustomerProductCard({
         </div>
 
         {/* Top-left Badges */}
-        <div className="absolute left-3 top-3 flex flex-col gap-2">
+        <div className="absolute left-3 top-3 flex flex-col gap-2 z-10">
           {hasDiscount && (
             <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 shadow-md px-3 py-1 text-xs font-bold">
               <TrendingUp className="h-3 w-3 mr-1" />
