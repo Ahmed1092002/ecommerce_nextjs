@@ -3,7 +3,8 @@ import { useProduct } from "@/hooks/useProduct";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { ProductCard } from "@/components/shared/ProductCard";
+import { CustomerProductCard } from "@/components/customer/CustomerProductCard";
+import { useWishlist } from "@/hooks/useWishlist";
 import {
   Pagination,
   PaginationContent,
@@ -35,15 +36,19 @@ import {
   LayoutGrid,
   List,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 
 type ApiItem = {
   id: number | string;
   name: string;
   description?: string;
+  image?: string;
   price: number;
   quantity?: number;
   discount?: number;
   finalPrice?: number;
+  inWishlist?: boolean;
 };
 
 type PaginatedProducts = {
@@ -56,7 +61,10 @@ type PaginatedProducts = {
 
 export default function Product() {
   const router = useRouter();
-  const { getCustomerProducts, Loading: loadingProducts } = useProduct();
+  const { getCustomerProducts, loading: loadingProducts } = useProduct();
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist } = useWishlist();
   const [items, setItems] = useState<ApiItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -98,6 +106,32 @@ export default function Product() {
     }
   }
 
+  async function handleWishlistToggle(productId: number, productName: string) {
+    // Find the product in items
+    const idx = items.findIndex((it) => {
+      if (typeof it.id === "string" || typeof productId === "string") {
+        return String(it.id) === String(productId);
+      }
+      return it.id === productId;
+    });
+    if (idx === -1) return;
+    const isInWishlist = !!items[idx].inWishlist;
+    try {
+      if (isInWishlist) {
+        await removeFromWishlist(productId);
+        toast.success(`${productName} removed from wishlist`);
+      } else {
+        await addToWishlist(productId);
+        toast.success(`${productName} added to wishlist`);
+      }
+      // Reload products to ensure UI is in sync with backend
+      await load(page);
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+      toast.error("Failed to update wishlist");
+    }
+  }
+
   useEffect(() => {
     load();
   }, [page]);
@@ -133,7 +167,7 @@ export default function Product() {
 
   // Generate pagination items with ellipsis
   const generatePaginationItems = () => {
-    const items = [];
+    const items: (number | string)[] = [];
     const maxVisible = 5;
 
     if (totalPages <= maxVisible) {
@@ -440,27 +474,48 @@ export default function Product() {
                   </Button>
                 </div>
               ) : (
-                items.map((it) => (
-                  <ProductCard
-                    buttonTitle="View Details"
-                    onButtonClick={() =>
-                      router.push(`/product/${it.id}`)
-                    }
-                    link={`/product/${it.id}`}
-                    key={String(it.id)}
-                    showAddToCartButton={true}
-                    onAddToCartClick={() => {
-                      console.log("Add to cart clicked for product:", it);
-                    }}
-                    product={{
-                      id: String(it.id),
-                      name: it.name,
-                      price: it.finalPrice ?? it.price,
-                      stock: typeof it.quantity === "number" ? it.quantity : 0,
-                      images: [],
-                    }}
-                  />
-                ))
+                items.map((it) => {
+                  return (
+                    <CustomerProductCard
+                      key={String(it.id)}
+                      product={{
+                        id: String(it.id),
+                        name: it.name,
+                        price: it.price,
+                        finalPrice: it.finalPrice,
+                        discount: it.discount,
+                        stock:
+                          typeof it.quantity === "number" ? it.quantity : 0,
+                        image: it.image,
+                        inWishlist: !!it.inWishlist,
+                        rating: 4.5, // You can add actual rating from API
+                      }}
+                      onWishlistToggle={async () => {
+                        if (!user) {
+                          toast.error(
+                            "Please log in to add products to your wishlist"
+                          );
+                          return;
+                        }
+                        await handleWishlistToggle(Number(it.id), it.name);
+                      }}
+                      onAddToCart={async () => {
+                        if (!user) {
+                          toast.error(
+                            "Please log in to add products to your cart"
+                          );
+                          return;
+                        }
+                        await addToCart({
+                          productId: Number(it.id),
+                          quantity: 1,
+                        });
+                        toast.success(`${it.name} added to cart!`);
+                      }}
+                      link="/product/"
+                    />
+                  );
+                })
               )}
             </div>
 

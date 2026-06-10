@@ -23,10 +23,12 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { Product, ProductData } from "@/types/product";
 
 type ApiItem = {
   id: number | string;
   name: string;
+  image: string;
   description?: string;
   price: number;
   quantity?: number;
@@ -46,7 +48,7 @@ export function SellerProductList() {
   const { getSellerProducts } = useProduct();
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(8);
-  const [items, setItems] = useState<ApiItem[]>([]);
+  const [items, setItems] = useState<ProductData[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchName, setSearchName] = useState<string>("");
@@ -70,7 +72,7 @@ export function SellerProductList() {
 
       const res = (await getSellerProducts(
         params
-      )) as unknown as PaginatedProducts;
+      )) as unknown as Product;
       setItems(res?.data);
       setTotalPages(res?.totalPages);
       setPage(res?.pageNumber);
@@ -233,7 +235,7 @@ export function SellerProductList() {
                 name: it.name,
                 price: it.finalPrice ?? it.price,
                 stock: typeof it.quantity === "number" ? it.quantity : 0,
-                images: [],
+                image: it.image,
               }}
             />
           ))

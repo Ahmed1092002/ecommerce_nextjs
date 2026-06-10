@@ -1,118 +1,69 @@
 "use client";
+
 import { useState } from "react";
-import { Product } from "@/types/product";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api-client";
-import { AddToCartData, Cart } from "@/types/cart";
-export function useCart() {
-  const [cart, setCart] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+import { AddToCartData, Cart, CartData } from "@/types/cart";
+import { handleHookError } from "./utils/hook-utils";
+import { useAsyncOperation } from "./useAsyncOperation";
 
-  async function addToCart(addToCartData: AddToCartData) {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.post("/cart/AddItem", addToCartData);
-      toast.success("Product added to cart!");
-      return response;
-    } catch (error) {
-      let errorMessage =
-        "An error occurred while adding the product to the cart.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+export interface UseCartReturn {
+  loading: boolean;
+  error: string | null;
+  addToCart: (data: AddToCartData) => Promise<void>;
+  getCart: () => Promise<CartData>;
+  removeFromCart: (cartItemId: number) => Promise<void>;
+  updateCartQuantity: (cartItemId: number, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
+}
+
+export function useCart(): UseCartReturn {
+  const { loading, error, withLoadingAndError } = useAsyncOperation();
+
+  async function addToCart(addToCartData: AddToCartData): Promise<void> {
+    return withLoadingAndError(async () => {
+      await api.post("/customer/cart/AddItem", addToCartData);
+    }, "Product added to cart!");
   }
 
-  async function getCart() {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.get<Cart>("/cart/GetCart");
-      return response;
-    } catch (error) {
-      let errorMessage = "An error occurred while fetching the cart.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+  async function getCart(): Promise<CartData> {
+    return withLoadingAndError(async () => {
+      const response = await api.get<Cart>("/customer/cart/GetCart");
+      // API returns the full Cart object with nested cart property
+      return response.cart;
+    });
   }
 
-  async function removeFromCart(cartItemId: number) {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.delete(`/cart/remove/${cartItemId}`);
-      toast.success("Product removed from cart!");
-      return response;
-    } catch (error) {
-      let errorMessage =
-        "An error occurred while removing the product from the cart.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+  async function removeFromCart(cartItemId: number): Promise<void> {
+    return withLoadingAndError(async () => {
+      await api.delete(`/customer/cart/remove/${cartItemId}`);
+    }, "Product removed from cart!");
   }
 
-  async function updateCartQuantity(cartItemId: number, quantity: number) {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.patch(`/cart/update/${cartItemId}`, {
+  async function updateCartQuantity(
+    cartItemId: number,
+    quantity: number
+  ): Promise<void> {
+    return withLoadingAndError(async () => {
+      await api.put(`/customer/cart/update/${cartItemId}`, {
         quantity,
       });
-      toast.success("Product quantity updated!");
-      return response;
-    } catch (error) {
-      let errorMessage =
-        "An error occurred while updating the product quantity.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+    }, "Product quantity updated!");
   }
-  async function clearCart() {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.delete("/cart/clear");
-      toast.success("Cart cleared!");
-      return response;
-    } catch (error) {
-      let errorMessage = "An error occurred while clearing the cart.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+
+  async function clearCart(): Promise<void> {
+    return withLoadingAndError(async () => {
+      await api.delete("/customer/cart/clear");
+    }, "Cart cleared!");
   }
 
   return {
+    loading,
+    error,
     addToCart,
     getCart,
     removeFromCart,
     updateCartQuantity,
     clearCart,
-    error,
   };
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +22,7 @@ import {
   LogOut,
   Store,
   User2,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,8 +33,7 @@ interface SellerSidebarProps {
 
 export function SellerSidebar({ navItems }: SellerSidebarProps) {
   const pathname = usePathname();
-  // const router = useRouter();
-  const { logout, User } = useAuth();
+  const { logout, user } = useAuth();
 
   // Default navigation items
   const defaultItems = [
@@ -44,7 +44,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
     },
     {
       label: "Products",
-      href: "/seller/products",
+      href: "/seller/product",
       icon: <Package className="h-4 w-4" />,
     },
     {
@@ -54,14 +54,15 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
     },
     {
       label: "Analytics",
-      href: "/seller/analytics",
+      href: "/seller/analysis",
       icon: <BarChart3 className="h-4 w-4" />,
     },
     {
-      label: "Settings",
-      href: "/seller/settings",
-      icon: <Settings className="h-4 w-4" />,
+      label: "Addresses",
+      href: "/seller/addresses",
+      icon: <MapPin className="h-4 w-4" />,
     },
+
   ];
 
   // Use provided navItems or default items
@@ -86,9 +87,13 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
               <Store className="h-6 w-6" />
               <span>Seller Panel</span>
             </div>
-            {User && (
+            {user && (
               <div className="text-xs text-muted-foreground font-medium">
-                {User.username || User.email}
+                {"username" in user
+                  ? user.username
+                  : "businessName" in user
+                  ? user.businessName
+                  : user.email}
               </div>
             )}
           </div>
@@ -130,7 +135,7 @@ export function SellerSidebar({ navItems }: SellerSidebarProps) {
         {/* Footer with Actions */}
         <SidebarFooter className="px-4 py-4 border-t border-[var(--sidebar-border)] space-y-2">
           {/* Back to Store Button */}
-          <Link href="/products" className="block">
+          <Link href="/seller/profile" className="block">
             <Button variant="outline" className="w-full justify-start gap-2">
               <User2 className="h-4 w-4" />
               <span>Profile</span>

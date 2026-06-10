@@ -53,7 +53,7 @@ export async function apiClient<T>(
     });
 
     const data = await response.json();
-
+    console.log(response);
     if (!response.ok) {
       const error = data as ApiError;
       // Pass the error field (e.g., "password") to createApiError
@@ -98,10 +98,10 @@ export const api = {
       body: JSON.stringify(body),
     }),
 
-  patch: <T>(endpoint: string, body: unknown) =>
+  patch: <T>(endpoint: string, body?: unknown) =>
     apiClient<T>(endpoint, {
       method: "PATCH",
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     }),
 
   delete: <T>(endpoint: string) =>

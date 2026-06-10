@@ -2,7 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import logo from "../../../../public/images/logo-transparent.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -10,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Heart } from "lucide-react";
 
 export function Header() {
   return (
@@ -17,18 +20,34 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           href="/"
-          className="text-2xl font-bold text-white hover:text-orange-200 transition-colors"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
-          🛒 Store
+          <Image
+            src={logo}
+            alt="Aura Shop Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+          <span className="text-2xl font-bold text-white">Aura Shop</span>
         </Link>
 
         <nav className="flex items-center gap-3">
-          <Link href="/products">
+          <Link href="/product">
             <Button
               variant="ghost"
               className="text-white hover:bg-blue-700 hover:text-orange-200"
             >
               Products
+            </Button>
+          </Link>
+          <Link href="/wishlist">
+            <Button
+              variant="ghost"
+              className="text-white hover:bg-blue-700 hover:text-orange-200 flex items-center gap-2"
+            >
+              <Heart className="h-4 w-4" />
+              Wishlist
             </Button>
           </Link>
           <Link href="/cart">

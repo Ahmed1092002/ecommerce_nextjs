@@ -1,14 +1,16 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { Search, ShoppingCart, User, Menu, LogOut } from "lucide-react";
+import { ShoppingCart, User, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "../../../public/images/logo-white.png";
+import Image from "next/image";
+
 export function Navbar() {
-  const { logout, User: user } = useAuth();
+  const { logout, user } = useAuth();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
@@ -31,9 +33,19 @@ export function Navbar() {
     >
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src={logo}
+              alt="Aura Shop Logo"
+              width={32}
+              height={32}
+              className="object-contain"
+            />
             <span className="text-xl font-bold tracking-tight text-(--primary)">
-              E-STORE
+              Aura Shop
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -46,32 +58,11 @@ export function Navbar() {
             >
               Shop
             </Link>
-            <Link
-              href="/about"
-              className="transition-colors hover:text-primary text-muted-foreground"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="transition-colors hover:text-primary text-muted-foreground"
-            >
-              Contact
-            </Link>
+  
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex relative w-full max-w-sm items-center">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              variant={"search"}
-              placeholder="Search products..."
-              className="w-64 pl-9 rounded-full bg-secondary/50 border-none focus-visible:ring-1"
-            />
-          </div>
-
           <Button
             variant="ghost"
             size="icon"
@@ -83,7 +74,11 @@ export function Navbar() {
             <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary"></span>
           </Button>
 
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/profile")}
+          >
             <User className="h-5 w-5" />
             <span className="sr-only">Account</span>
           </Button>

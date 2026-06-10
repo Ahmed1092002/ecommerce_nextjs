@@ -1,4 +1,6 @@
 import React from "react";
+import logo from "../../../../public/images/logo-white.png";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -6,7 +8,16 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">🛒 Store</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <Image
+                src={logo}
+                alt="Aura Shop Logo"
+                width={32}
+                height={32}
+                className="object-contain"
+              />
+              <h3 className="text-white font-bold text-lg">Aura Shop</h3>
+            </div>
             <p className="text-slate-400 text-sm">
               Your trusted e-commerce platform
             </p>
@@ -41,7 +52,7 @@ export function Footer() {
           </div>
         </div>
         <div className="text-center text-sm text-slate-500 border-t border-slate-700 pt-6">
-          © {new Date().getFullYear()} Store. All rights reserved.
+          © {new Date().getFullYear()} Aura Shop. All rights reserved.
         </div>
       </div>
     </footer>
