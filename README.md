@@ -1,3 +1,17 @@
+# Aura Shop
+
+**Frontend:**
+
+- [GitHub](https://github.com/Ahmed1092002/ecommerce_nextjs) | [Demo](https://ecommerce-nextjs-phi-lyart.vercel.app/)
+
+**Backend:**
+
+- [GitHub](https://github.com/Ahmed1092002/ecommerce_spring) | [Swagger API](https://ecommerce-spring-luoa.onrender.com/swagger-ui/index.html)
+
+**Technologies:** Next.js 16, React 19, TypeScript, Tailwind CSS, Radix UI (Radix Primitives), react-hook-form, zod, react-toastify, js-cookie, lucide-react, class-variance-authority, clsx, tailwind-merge
+
+E-commerce platform with customer and seller roles, product management, and order flow. The project uses a custom API client and common utilities in `lib/`.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
